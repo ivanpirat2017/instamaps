@@ -76,7 +76,6 @@ main {
 }
 
 .post {
-    background: white;
     border-radius: 12px;
     padding: 12px;
     box-shadow: var(--shadow);
@@ -121,7 +120,6 @@ main {
 }
 
 .profile-card {
-    background: white;
     border-radius: 12px;
     padding: 20px;
     box-shadow: var(--shadow);
@@ -159,9 +157,6 @@ main {
 }
 
 .map-container {
-    background: white;
-    border-radius: 12px;
-    padding: 12px;
     box-shadow: var(--shadow);
     flex-grow: 1;
     display: flex;
@@ -193,7 +188,6 @@ main {
 }
 
 .auth-container {
-    background: white;
     border-radius: 12px;
     padding: 24px;
     box-shadow: var(--shadow);
@@ -202,7 +196,6 @@ main {
 }
 
 .search-container {
-    background: white;
     border-radius: 12px;
     padding: 16px;
     box-shadow: var(--shadow);
@@ -221,7 +214,6 @@ main {
         gap: 16px;
 
         .result-item {
-            background: white;
             border-radius: 10px;
             padding: 12px;
             transition: transform 0.3s;

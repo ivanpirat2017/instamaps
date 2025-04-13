@@ -1,46 +1,27 @@
 <template>
   <main class="container">
     <section class="search-container mb-4">
-      <h2>Поиск фотографий</h2>
-      <div class="search-bar">
-        <input v-model="searchQuery" type="text" placeholder="Поиск: закат на пляже..." />
-        <button @click="search">Найти</button>
-      </div>
+      <h2>{{ $t('app.searchPhotos') }}</h2>
+      <SearchBar v-model="searchQuery" @search="search" />
     </section>
     <section class="search-container">
-      <div class="filter-tags">
-        <span
-          v-for="tag in tags"
-          :key="tag"
-          class="tag"
-          :class="{ active: activeTag === tag }"
-          @click="filterByTag(tag)"
-        >
-          {{ tag }}
-        </span>
-      </div>
-      <div class="search-results">
-        <div class="result-item" v-for="post in filteredPosts" :key="post.id">
-          <img :src="post.image" :alt="post.title" />
-          <div class="result-info">
-            <h3>{{ post.title }}</h3>
-            <p>{{ post.description }}, @{{ post.user }}</p>
-            <div class="result-tags">
-              <span v-for="tag in post.tags" :key="tag">#{{ tag }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <FilterTags v-model="activeTag" :tags="tags" @filter="filterByTag" />
+      <SearchResults :posts="filteredPosts" />
     </section>
   </main>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
-import { usePostStore } from "../stores/post";
+import { ref, computed } from 'vue';
+import { usePostStore } from '../stores/post';
+import SearchBar from '../components/search/SearchBar.vue';
+import FilterTags from '../components/search/FilterTags.vue';
+import SearchResults from '../components/search/SearchResults.vue';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
 
 const postStore = usePostStore();
-const searchQuery = ref("");
+const searchQuery = ref('');
 const activeTag = ref<string | null>(null);
 
 const tags = computed(() => {
@@ -76,6 +57,6 @@ function search() {
 
 function filterByTag(tag: string) {
   activeTag.value = activeTag.value === tag ? null : tag;
-  searchQuery.value = "";
+  searchQuery.value = '';
 }
 </script>

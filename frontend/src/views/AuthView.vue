@@ -1,157 +1,63 @@
 <template>
   <main class="auth-body">
     <section class="auth-container">
-      <div class="auth-tabs">
-        <button class="tab" :class="{ active: activeTab === 'login' }" @click="activeTab = 'login'">
-          Вход
-        </button>
-        <button
-          class="tab"
-          :class="{ active: activeTab === 'register' }"
-          @click="activeTab = 'register'"
-        >
-          Регистрация
-        </button>
-      </div>
-      <div class="auth-form" v-if="activeTab === 'login'">
-        <h2>Вход</h2>
-        <form @submit.prevent="handleLogin">
-          <div class="form-group">
-            <label for="login-email">Эл. почта</label>
-            <input
-              v-model="loginForm.email"
-              type="email"
-              id="login-email"
-              placeholder="example@domain.com"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="login-password">Пароль</label>
-            <input
-              v-model="loginForm.password"
-              type="password"
-              id="login-password"
-              placeholder="Введите пароль"
-              required
-            />
-          </div>
-          <button type="submit" class="auth-button" :disabled="isLoading">Войти</button>
-          <p class="form-switch">
-            Нет аккаунта? <a href="#" @click.prevent="activeTab = 'register'">Зарегистрируйтесь</a>
-          </p>
-        </form>
-      </div>
-      <div class="auth-form" v-if="activeTab === 'register'">
-        <h2>Регистрация</h2>
-        <form @submit.prevent="handleRegister">
-          <div class="form-group">
-            <label for="register-username">Имя пользователя</label>
-            <input
-              v-model="registerForm.username"
-              type="text"
-              id="register-username"
-              placeholder="Ваш ник"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="register-email">Эл. почта</label>
-            <input
-              v-model="registerForm.email"
-              type="email"
-              id="register-email"
-              placeholder="example@domain.com"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="register-password">Пароль</label>
-            <input
-              v-model="registerForm.password"
-              type="password"
-              id="register-password"
-              placeholder="Придумайте пароль"
-              required
-            />
-          </div>
-          <div class="form-group">
-            <label for="register-confirm-password">Подтверждение пароля</label>
-            <input
-              v-model="registerForm.confirmPassword"
-              type="password"
-              id="register-confirm-password"
-              placeholder="Повторите пароль"
-              required
-            />
-          </div>
-          <button type="submit" class="auth-button" :disabled="isLoading">
-            Зарегистрироваться
-          </button>
-          <p class="form-switch">
-            Уже есть аккаунт? <a href="#" @click.prevent="activeTab = 'login'">Войдите</a>
-          </p>
-        </form>
-      </div>
+      <AuthTabs v-model="activeTab" />
+      <LoginForm
+        v-if="activeTab === 'login'"
+        @submit="handleLogin"
+        @switch="activeTab = 'register'"
+      />
+      <RegisterForm
+        v-if="activeTab === 'register'"
+        @submit="handleRegister"
+        @switch="activeTab = 'login'"
+      />
     </section>
   </main>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useAuthStore } from "../stores/auth";
-import { useRouter } from "vue-router";
+import { ref } from 'vue';
+import { useAuthStore } from '../stores/auth';
+import { useRouter } from 'vue-router';
+import AuthTabs from '../components/auth/AuthTabs.vue';
+import LoginForm from '../components/auth/LoginForm.vue';
+import RegisterForm from '../components/auth/RegisterForm.vue';
 
-const activeTab = ref<"login" | "register">("login");
+const activeTab = ref<'login' | 'register'>('login');
 const authStore = useAuthStore();
 const router = useRouter();
-const isLoading = ref(false);
 
-const loginForm = ref({
-  email: "",
-  password: "",
-});
-
-const registerForm = ref({
-  username: "",
-  email: "",
-  password: "",
-  confirmPassword: "",
-});
-
-async function handleLogin() {
-  isLoading.value = true;
+async function handleLogin({ email, password }: { email: string; password: string }) {
   try {
-    if (await authStore.login(loginForm.value.email, loginForm.value.password)) {
-      router.push("/");
-    } else {
-      alert("Ошибка входа");
+    if (await authStore.login(email, password)) {
+      router.push('/');
     }
-  } finally {
-    isLoading.value = false;
+  } catch {
+    // Error handled in LoginForm
   }
 }
 
-async function handleRegister() {
-  if (registerForm.value.password !== registerForm.value.confirmPassword) {
-    alert("Пароли не совпадают!");
-    return;
-  }
-  isLoading.value = true;
+async function handleRegister({
+  username,
+  email,
+  password,
+  confirmPassword,
+}: {
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}) {
   try {
-    if (
-      await authStore.register(
-        registerForm.value.username,
-        registerForm.value.email,
-        registerForm.value.password
-      )
-    ) {
-      router.push("/");
-    } else {
-      alert("Ошибка регистрации");
+    if (password !== confirmPassword) {
+      return;
     }
-  } finally {
-    isLoading.value = false;
+    if (await authStore.register(username, email, password)) {
+      router.push('/');
+    }
+  } catch {
+    // Error handled in RegisterForm
   }
 }
 </script>

@@ -1,0 +1,19 @@
+:root {
+    --primary-color: #1f2937;
+    --accent-color: #4f46e5;
+    --accent-hover: #7c3aed;
+    --background-gradient: linear-gradient(135deg, #e0e7ff, #c3dafe);
+    --white-transparent: rgba(255, 255, 255, 0.9);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --border-color: rgba(0, 0, 0, 0.1);
+}
+
+.dark {
+    --primary-color: #e5e7eb;
+    --accent-color: #6366f1;
+    --accent-hover: #a5b4fc;
+    --background-gradient: linear-gradient(135deg, #1f2937, #374151);
+    --white-transparent: rgba(31, 41, 55, 0.9);
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --border-color: rgba(255, 255, 255, 0.1);
+}

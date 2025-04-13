@@ -1,20 +1,19 @@
 <template>
-  <div class="flex flex-col min-h-screen">
+  <div class="flex flex-col min-h-screen" :class="{ dark: themeStore.isDarkMode }">
     <AppHeader />
-    <router-view />
-    <footer class="footer">
-      <div class="container">
-        <p>© 2025 PhotoStream. Все права защищены.</p>
-        <div class="social-links">
-          <a href="#">X</a>
-          <a href="#">Instagram</a>
-          <a href="#">Контакты</a>
-        </div>
-      </div>
-    </footer>
+    <router-view v-slot="{ Component }">
+      <Suspense>
+        <component :is="Component" />
+      </Suspense>
+    </router-view>
+    <AppFooter />
   </div>
 </template>
 
 <script setup lang="ts">
 import AppHeader from "./components/AppHeader.vue";
+import AppFooter from "./components/AppFooter.vue";
+import { useThemeStore } from "./stores/theme";
+const themeStore = useThemeStore();
+themeStore.toggleTheme();
 </script>

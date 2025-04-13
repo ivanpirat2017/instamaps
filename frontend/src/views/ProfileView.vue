@@ -1,25 +1,16 @@
 <template>
   <main class="container">
-    <section class="profile-card">
-      <img src="https://via.placeholder.com/120" alt="Аватар" />
-      <h2>@{{ user?.username || "traveler" }}</h2>
-      <p>Люблю природу и фотографию. Исследую мир!</p>
-      <div class="tags">
-        <span>#природа</span>
-        <span>#путешествия</span>
-        <span>#фото</span>
-      </div>
-    </section>
-    <section class="photo-grid">
-      <img v-for="post in userPosts" :key="post.id" :src="post.image" :alt="post.title" />
-    </section>
+    <ProfileCard :user="user" />
+    <PhotoGrid :posts="userPosts" />
   </main>
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
-import { useAuthStore } from "../stores/auth";
-import { usePostStore } from "../stores/post";
+import { computed } from 'vue';
+import { useAuthStore } from '../stores/auth';
+import { usePostStore } from '../stores/post';
+import ProfileCard from '../components/profile/ProfileCard.vue';
+import PhotoGrid from '../components/profile/PhotoGrid.vue';
 
 const authStore = useAuthStore();
 const postStore = usePostStore();

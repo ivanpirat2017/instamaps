@@ -1,0 +1,33 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import "vuestic-ui/styles/essential.css";
+@import "vuestic-ui/styles/typography.css";
+@import "./variables";
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family:
+      "Inter",
+      -apple-system,
+      BlinkMacSystemFont,
+      sans-serif;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  body {
+    background: var(--background-gradient);
+    color: var(--primary-color);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+}

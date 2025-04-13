@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
+import { showToast } from "../utils/toast";
 
 export interface Comment {
   id: number;
@@ -25,39 +26,39 @@ export const usePostStore = defineStore("post", () => {
   const posts = ref<Post[]>([
     {
       id: 1,
-      title: "Закат на пляже",
-      description: "Красивый вечер у моря, 12 апреля 2025",
+      title: "Beach Sunset",
+      description: "A beautiful evening by the sea, April 12, 2025",
       image: "https://via.placeholder.com/800x500",
       comments: [
-        { id: 1, user: "user1", text: "Потрясающе!" },
-        { id: 2, user: "user2", text: "Хочу туда!" },
+        { id: 1, user: "user1", text: "Stunning!" },
+        { id: 2, user: "user2", text: "I want to go there!" },
       ],
       showComments: false,
       newComment: "",
-      tags: ["закат", "пляж"],
+      tags: ["sunset", "beach"],
       location: { lat: 12.34, lng: 56.78 },
       user: "traveler",
     },
     {
       id: 2,
-      title: "Горы в тумане",
-      description: "Утренний пейзаж, 10 апреля 2025",
+      title: "Misty Mountains",
+      description: "Morning landscape, April 10, 2025",
       image: "https://via.placeholder.com/800x500",
-      comments: [{ id: 1, user: "user3", text: "Какая атмосфера!" }],
+      comments: [{ id: 1, user: "user3", text: "What an atmosphere!" }],
       showComments: false,
       newComment: "",
-      tags: ["природа", "горы"],
+      tags: ["nature", "mountains"],
       user: "mountain_lover",
     },
     {
       id: 3,
-      title: "Море и закат",
-      description: "10 апреля 2025",
+      title: "Sea and Sunset",
+      description: "April 10, 2025",
       image: "https://via.placeholder.com/300",
       comments: [],
       showComments: false,
       newComment: "",
-      tags: ["закат", "море"],
+      tags: ["sunset", "sea"],
       user: "sea_lover",
     },
   ]);
@@ -71,7 +72,7 @@ export const usePostStore = defineStore("post", () => {
         newComment: "",
       }));
     } catch (error) {
-      console.error("Failed to fetch posts:", error);
+      throw new Error("Failed to fetch posts");
     }
   }
 
@@ -92,8 +93,9 @@ export const usePostStore = defineStore("post", () => {
         await axios.post(`/api/posts/${postId}/comments`, newComment);
         post.comments.push(newComment);
         post.newComment = "";
+        showToast("Comment added", "success");
       } catch (error) {
-        console.error("Failed to add comment:", error);
+        showToast("Failed to add comment", "error");
       }
     }
   }

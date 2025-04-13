@@ -1,1258 +1,1431 @@
-auth.html
-<!DOCTYPE html>
-<html lang="ru">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вход и регистрация</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-</head>
-
-<body>
-    <!-- Хедер -->
-    <header class="header">
-        <div class="container">
-            <div class="logo">PhotoStream</div>
-     
-            <nav class="nav">
-                <div class="burger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="index.html"><i class="fas fa-home"></i> Лента</a></li>
-                    <li><a href="search.html"><i class="fas fa-home"></i> Поиск</a></li>
-                    <li><a href="map.html"><i class="fas fa-map"></i> Карта</a></li>
-                    <li><a href="profile.html"><i class="fas fa-user"></i> Профиль</a></li>
-                    <li><a href="auth.html" class="active"><i class="fas fa-sign-in-alt"></i> Вход</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Основной контент -->
-    <main class="container">
-        <div class="auth-body">
-            <section class="auth-container">
-                <div class="auth-tabs">
-                    <button class="tab active" data-tab="login">Вход</button>
-                    <button class="tab" data-tab="register">Регистрация</button>
-                </div>
-                <div class="auth-form" id="login">
-                    <h2>Вход</h2>
-                    <form >
-                        <div class="form-group">
-                            <label for="login-email">Эл. почта</label>
-                            <input type="email" id="login-email" placeholder="example@domain.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="login-password">Пароль</label>
-                            <input type="password" id="login-password" placeholder="Введите пароль" required>
-                        </div>
-                        <button type="submit" class="auth-button">Войти</button>
-                        <p class="form-switch">Нет аккаунта? <a href="#" data-tab="register">Зарегистрируйтесь</a></p>
-                    </form>
-                </div>
-                <div class="auth-form" id="register" style="display: none;">
-                    <h2>Регистрация</h2>
-                    <form>
-                        <div class="form-group">
-                            <label for="register-username">Имя пользователя</label>
-                            <input type="text" id="register-username" placeholder="Ваш ник" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="register-email">Эл. почта</label>
-                            <input type="email" id="register-email" placeholder="example@domain.com" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="register-password">Пароль</label>
-                            <input type="password" id="register-password" placeholder="Придумайте пароль" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="register-confirm-password">Подтверждение пароля</label>
-                            <input type="password" id="register-confirm-password" placeholder="Повторите пароль"
-                                required>
-                        </div>
-                        <button type="submit" class="auth-button">Зарегистрироваться</button>
-                        <p class="form-switch">Уже есть аккаунт? <a href="#" data-tab="login">Войдите</a></p>
-                    </form>
-                </div>
-            </section>
-        </div>
-    </main>
-
-    <!-- Футер -->
-    <footer class="footer">
-        <div class="container">
-            <p>© 2025 PhotoStream. Все права защищены.</p>
-            <div class="social-links">
-                <a href="#">X</a>
-                <a href="#">Instagram</a>
-                <a href="#">Контакты</a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-
-</html>
-
-index.html
-<!DOCTYPE html>
-<html lang="ru">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Лента фотографий</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-</head>
-
-<body>
-    <!-- Хедер -->
-    <header class="header">
-        <div class="container">
-            <div class="logo">PhotoStream</div>
+App.vue
+<template>
+    <div class="flex flex-col min-h-screen">
+      <AppHeader />
+      <router-view />
+      <AppFooter />
+    </div>
+  </template>
   
-            <nav class="nav">
-                <div class="burger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="index.html"><i class="fas fa-home"></i> Лента</a></li>
-                    <li><a href="search.html"><i class="fas fa-home"></i> Поиск</a></li>
-                    <li><a href="map.html"><i class="fas fa-map"></i> Карта</a></li>
-                    <li><a href="profile.html"><i class="fas fa-user"></i> Профиль</a></li>
-                    <li><a href="auth.html" class="active"><i class="fas fa-sign-in-alt"></i> Вход</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
+  <script setup lang="ts">
+  import AppHeader from './components/AppHeader.vue';
+  import AppFooter from './components/AppFooter.vue';
+  </script>
 
-    <!-- Основной контент -->
-    <main class="container">
-        <section class="feed">
-            <div class="post">
-                <img src="https://via.placeholder.com/800x500" alt="Фото">
-                <div class="post-content">
-                    <h3>Закат на пляже</h3>
-                    <p>Красивый вечер у моря, 12 апреля 2025</p>
-                    <button class="toggle-comments">Комментарии (2)</button>
-                    <div class="comments" style="display: none;">
-                        <p><strong>user1:</strong> Потрясающе!</p>
-                        <p><strong>user2:</strong> Хочу туда!</p>
-                        <div class="add-comment">
-                            <input type="text" placeholder="Ваш комментарий...">
-                            <button>Отправить</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="post">
-                <img src="https://via.placeholder.com/800x500" alt="Фото">
-                <div class="post-content">
-                    <h3>Горы в тумане</h3>
-                    <p>Утренний пейзаж, 10 апреля 2025</p>
-                    <button class="toggle-comments">Комментарии (1)</button>
-                    <div class="comments" style="display: none;">
-                        <p><strong>user3:</strong> Какая атмосфера!</p>
-                        <div class="add-comment">
-                            <input type="text" placeholder="Ваш комментарий...">
-                            <button>Отправить</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
+assets\styles.scss
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+@import 'vuestic-ui/styles/essential.css';
+@import 'vuestic-ui/styles/typography.css';
 
-    <!-- Футер -->
-    <footer class="footer">
-        <div class="container">
-            <p>© 2025 PhotoStream. Все права защищены.</p>
-            <div class="social-links">
-                <a href="#">X</a>
-                <a href="#">Instagram</a>
-                <a href="#">Контакты</a>
-            </div>
-        </div>
-    </footer>
+$primary-color: #1f2937;
+$accent-color: #4f46e5;
+$accent-hover: #7c3aed;
+$background-gradient: linear-gradient(135deg, #e0e7ff, #c3dafe);
+$white-transparent: rgba(255, 255, 255, 0.9);
+$shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+$border-color: rgba(0, 0, 0, 0.1);
 
-    <script src="script.js"></script>
-</body>
-
-</html>
-
-map.html
-<!DOCTYPE html>
-<html lang="ru">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Карта фотографий</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.css" rel="stylesheet" />
-</head>
-
-<body>
-    <!-- Хедер -->
-    <header class="header">
-        <div class="container">
-            <div class="logo">PhotoStream</div>
-            <nav class="nav">
-                <div class="burger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="index.html"><i class="fas fa-home"></i> Лента</a></li>
-                    <li><a href="search.html"><i class="fas fa-home"></i> Поиск</a></li>
-                    <li><a href="map.html"><i class="fas fa-map"></i> Карта</a></li>
-                    <li><a href="profile.html"><i class="fas fa-user"></i> Профиль</a></li>
-                    <li><a href="auth.html" class="active"><i class="fas fa-sign-in-alt"></i> Вход</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Основной контент -->
-    <main class="container">
-        <section class="map-container">
-            <div id="map"></div>
-            <div class="map-overlay">
-                <h3>Закат на пляже</h3>
-                <p>Местоположение: 12.34, 56.78</p>
-            </div>
-        </section>
-    </main>
-
-    <!-- Футер -->
-    <footer class="footer">
-        <div class="container">
-            <p>© 2025 PhotoStream. Все права защищены.</p>
-            <div class="social-links">
-                <a href="#">X</a>
-                <a href="#">Instagram</a>
-                <a href="#">Контакты</a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.js"></script>
-    <script src="script.js"></script>
-    <script>
-        // Проверка загрузки MapLibre GL
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof maplibregl === 'undefined') {
-                console.error('MapLibre GL не загружен');
-                return;
-            }
-
-            const map = new maplibregl.Map({
-                container: 'map',
-                style: 'https://demotiles.maplibre.org/style.json',
-                center: [0, 0],
-                zoom: 2
-            });
-
-            map.on('load', () => {
-                map.addControl(new maplibregl.NavigationControl());
-
-                new maplibregl.Marker()
-                    .setLngLat([12.34, 56.78])
-                    .addTo(map);
-            });
-
-            // Обновление размеров карты при изменении окна
-            window.addEventListener('resize', () => {
-                map.resize();
-            });
-        });
-    </script>
-</body>
-
-</html>
-
-profile.html
-<!DOCTYPE html>
-<html lang="ru">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профиль пользователя</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-</head>
-
-<body>
-    <!-- Хедер -->
-    <header class="header">
-        <div class="container">
-            <div class="logo">PhotoStream</div>
- 
-            <nav class="nav">
-                <div class="burger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="index.html"><i class="fas fa-home"></i> Лента</a></li>
-                    <li><a href="search.html"><i class="fas fa-home"></i> Поиск</a></li>
-                    <li><a href="map.html"><i class="fas fa-map"></i> Карта</a></li>
-                    <li><a href="profile.html"><i class="fas fa-user"></i> Профиль</a></li>
-                    <li><a href="auth.html" class="active"><i class="fas fa-sign-in-alt"></i> Вход</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Основной контент -->
-    <main class="container">
-        <section class="profile-card">
-            <img src="https://via.placeholder.com/120" alt="Аватар">
-            <h2>@traveler</h2>
-            <p>Люблю природу и фотографию. Исследую мир!</p>
-            <div class="tags">
-                <span>#природа</span>
-                <span>#путешествия</span>
-                <span>#фото</span>
-            </div>
-        </section>
-        <section class="photo-grid">
-            <img src="https://via.placeholder.com/300" alt="Фото 1">
-            <img src="https://via.placeholder.com/300" alt="Фото 2">
-            <img src="https://via.placeholder.com/300" alt="Фото 3">
-            <img src="https://via.placeholder.com/300" alt="Фото 4">
-            <img src="https://via.placeholder.com/300" alt="Фото 5">
-            <img src="https://via.placeholder.com/300" alt="Фото 6">
-        </section>
-    </main>
-
-    <!-- Футер -->
-    <footer class="footer">
-        <div class="container">
-            <p>© 2025 PhotoStream. Все права защищены.</p>
-            <div class="social-links">
-                <a href="#">X</a>
-                <a href="#">Instagram</a>
-                <a href="#">Контакты</a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-
-</html>
-
-script.js
-// Бургер-меню
-const burger = document.querySelector('.burger');
-const navMenu = document.querySelector('.nav-menu');
-
-burger.addEventListener('click', () => {
-    burger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
-
-// Закрытие меню при клике на ссылку
-document.querySelectorAll('.nav-menu a').forEach(link => {
-    link.addEventListener('click', () => {
-        burger.classList.remove('active');
-        navMenu.classList.remove('active');
-    });
-});
-
-// Сворачивание комментариев
-document.querySelectorAll('.toggle-comments').forEach(button => {
-    button.addEventListener('click', () => {
-        const comments = button.nextElementSibling;
-        const isHidden = comments.style.display === 'none' || !comments.style.display;
-
-        comments.style.display = isHidden ? 'block' : 'none';
-        button.textContent = isHidden
-            ? `Скрыть комментарии`
-            : `Комментарии (${comments.querySelectorAll('p').length})`;
-    });
-});
-
-// Переключение вкладок аутентификации
-const tabs = document.querySelectorAll('.tab');
-const forms = document.querySelectorAll('.auth-form');
-
-tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-
-        forms.forEach(form => {
-            form.style.display = form.id === tab.dataset.tab ? 'flex' : 'none';
-        });
-    });
-});
-
-// Переключение форм через ссылки
-document.querySelectorAll('.form-switch a').forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const targetTab = link.dataset.tab;
-
-        tabs.forEach(t => {
-            t.classList.toggle('active', t.dataset.tab === targetTab);
-        });
-
-        forms.forEach(form => {
-            form.style.display = form.id === targetTab ? 'flex' : 'none';
-        });
-    });
-});
-
-// Валидация форм аутентификации
-document.querySelectorAll('.auth-form form').forEach(form => {
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const inputs = form.querySelectorAll('input');
-        let valid = true;
-
-        inputs.forEach(input => {
-            if (!input.value) {
-                input.style.border = '1px solid #ff4d4d';
-                valid = false;
-            } else {
-                input.style.border = 'none';
-            }
-        });
-
-        if (form.id === 'register') {
-            const password = form.querySelector('#register-password').value;
-            const confirmPassword = form.querySelector('#register-confirm-password').value;
-            if (password !== confirmPassword) {
-                alert('Пароли не совпадают!');
-                valid = false;
-            }
-        }
-
-        if (valid) {
-            alert(form.id === 'login' ? 'Вход выполнен!' : 'Регистрация успешна!');
-        }
-    });
-});
-
-// Фильтрация по тегам на странице поиска
-document.querySelectorAll('.filter-tags .tag').forEach(tag => {
-    tag.addEventListener('click', () => {
-        document.querySelectorAll('.filter-tags .tag').forEach(t => t.classList.remove('active'));
-        tag.classList.add('active');
-
-        const selectedTag = tag.dataset.tag;
-        const results = document.querySelectorAll('.result-item');
-
-        results.forEach(result => {
-            const tags = result.querySelectorAll('.result-tags span');
-            const hasTag = Array.from(tags).some(t => t.textContent.includes(selectedTag));
-            result.style.display = hasTag ? 'block' : 'none';
-        });
-    });
-});
-
-// Обработка поиска
-document.querySelector('.search-bar button').addEventListener('click', () => {
-    const query = document.querySelector('.search-bar input').value.toLowerCase();
-    const results = document.querySelectorAll('.result-item');
-
-    results.forEach(result => {
-        const title = result.querySelector('h3').textContent.toLowerCase();
-        const tags = Array.from(result.querySelectorAll('.result-tags span')).map(t => t.textContent.toLowerCase());
-        const matches = title.includes(query) || tags.some(t => t.includes(query));
-        result.style.display = matches ? 'block' : 'none';
-    });
-});
-
-search.html
-<!DOCTYPE html>
-<html lang="ru">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Поиск фотографий</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-</head>
-
-<body>
-    <!-- Хедер -->
-    <header class="header">
-        <div class="container">
-            <div class="logo">PhotoStream</div>
-            <nav class="nav">
-                <div class="burger">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </div>
-                <ul class="nav-menu">
-                    <li><a href="index.html"><i class="fas fa-home"></i> Лента</a></li>
-                    <li><a href="search.html"><i class="fas fa-home"></i> Поиск</a></li>
-                    <li><a href="map.html"><i class="fas fa-map"></i> Карта</a></li>
-                    <li><a href="profile.html"><i class="fas fa-user"></i> Профиль</a></li>
-                    <li><a href="auth.html" class="active"><i class="fas fa-sign-in-alt"></i> Вход</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <!-- Основной контент -->
-    <main class="container">
-        <section class="search-container" style="margin-bottom: 15px;">
-            <h2>Поиск фотографий</h2>
-            <div class="search-bar">
-                <input type="text" placeholder="Поиск: закат на пляже..." value="закат">
-                <button><a href="search.html">Найти</a></button>
-            </div>
-        </section>
-    
-        <section class="search-container">
-
-            <div class="filter-tags">
-                <span class="tag active" data-tag="закат">Закат</span>
-                <span class="tag" data-tag="пляж">Пляж</span>
-                <span class="tag" data-tag="природа">Природа</span>
-                <span class="tag" data-tag="море">Море</span>
-            </div>
-            <div class="search-results">
-                <div class="result-item">
-                    <img src="https://via.placeholder.com/300" alt="Закат на пляже">
-                    <div class="result-info">
-                        <h3>Закат на пляже</h3>
-                        <p>12 апреля 2025, @traveler</p>
-                        <div class="result-tags">
-                            <span>#закат</span>
-                            <span>#пляж</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="result-item">
-                    <img src="https://via.placeholder.com/300" alt="Море и закат">
-                    <div class="result-info">
-                        <h3>Море и закат</h3>
-                        <p>10 апреля 2025, @sea_lover</p>
-                        <div class="result-tags">
-                            <span>#закат</span>
-                            <span>#море</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Футер -->
-    <footer class="footer">
-        <div class="container">
-            <p>© 2025 PhotoStream. Все права защищены.</p>
-            <div class="social-links">
-                <a href="#">X</a>
-                <a href="#">Instagram</a>
-                <a href="#">Контакты</a>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
-
-</html>
-
-styles.css
-* {
+@layer base {
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family:
-        "Inter",
-        -apple-system,
-        BlinkMacSystemFont,
-        sans-serif;
-}
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
 
-a {
+  a {
     text-decoration: none;
     color: inherit;
-}
+  }
 
-body {
-    background: linear-gradient(135deg, #e0e7ff, #c3dafe);
-   height: 100vh;
-    color: #1f2937;
+  body {
+    background: $background-gradient;
+    color: $primary-color;
     line-height: 1.6;
     display: flex;
     flex-direction: column;
-}
+    min-height: 100vh;
+  }
 
-.container {
+  .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding:20px;
+    padding: 20px;
     width: 100%;
-    height: 100%;
-}
+  }
 
-/* Хедер */
-.header {
-    background: rgba(255, 255, 255, 0.9);
+  .header {
+    background: $white-transparent;
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid $border-color;
     position: sticky;
     top: 0;
     z-index: 1000;
     padding: 12px 0;
-}
 
-.header .container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
 
-.logo {
+  .logo {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #1f2937;
+    color: $primary-color;
     transition: color 0.3s;
-}
 
-.logo:hover {
-    color: #4f46e5;
-}
+    &:hover {
+      color: $accent-color;
+    }
+  }
 
-.search-bar {
-    background: rgba(243, 244, 246, 1);
-    border-radius: 10px;
-    padding: 8px;
+  .nav {
     display: flex;
     align-items: center;
-    max-width: 400px;
-    flex-grow: 1;
-    margin: 0 16px;
-}
+  }
 
-.search-bar input {
-    background: transparent;
-    border: none;
-    outline: none;
-    color: #1f2937;
-    font-size: 0.95rem;
-    flex-grow: 1;
-    padding: 8px;
-}
-
-.search-bar button {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition:
-        transform 0.2s,
-        box-shadow 0.2s;
-}
-
-.search-bar button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-}
-
-.nav {
-    display: flex;
-    align-items: center;
-}
-
-.nav-menu {
-    display: flex;
-    gap: 16px;
-    list-style: none;
-}
-
-.nav-menu a {
-    color: #1f2937;
-    font-size: 0.95rem;
-    font-weight: 500;
-    padding: 8px 12px;
-    border-radius: 8px;
-    transition:
-        background 0.3s,
-        color 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.nav-menu a i {
-    font-size: 1rem;
-}
-
-.nav-menu a:hover,
-.nav-menu a.active {
-    background: rgba(79, 70, 229, 0.1);
-    color: #4f46e5;
-}
-
-.burger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    z-index: 1001;
-}
-
-.burger span {
-    width: 25px;
-    height: 3px;
-    background: #1f2937;
-    transition: all 0.3s;
-}
-
-.burger.active span:nth-child(1) {
-    transform: rotate(45deg) translate(5px, 5px);
-}
-
-.burger.active span:nth-child(2) {
-    opacity: 0;
-}
-
-.burger.active span:nth-child(3) {
-    transform: rotate(-45deg) translate(7px, -7px);
-}
-
-/* Футер */
-.footer {
-    background: rgba(255, 255, 255, 0.9);
+  .footer {
+    background: $white-transparent;
     backdrop-filter: blur(10px);
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid $border-color;
     padding: 16px 0;
-}
 
-.footer .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-}
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+  }
 
-.footer p {
-    font-size: 0.9rem;
-    color: #1f2937;
-}
-
-.social-links a {
-    color: #1f2937;
-    margin-left: 12px;
-    font-size: 0.9rem;
-    transition: color 0.3s;
-}
-
-.social-links a:hover {
-    color: #4f46e5;
-}
-
-/* Основной контент */
-main {
+  main {
     flex-grow: 1;
     overflow-y: auto;
     padding: 16px 0;
-}
+  }
 
-/* Лента */
-.feed {
-    display: grid;
-    gap: 20px;
-}
-
-.post {
+  .post {
     background: white;
     border-radius: 12px;
     padding: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow;
     transition: transform 0.3s;
-}
 
-.post:hover {
-    transform: translateY(-4px);
-}
+    &:hover {
+      transform: translateY(-4px);
+    }
 
-.post img {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    object-fit: cover;
-}
+    img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      object-fit: cover;
+    }
 
-.post-content h3 {
-    font-size: 1.2rem;
-    color: #1f2937;
-    margin-bottom: 4px;
-}
+    .post-content {
+      h3 {
+        font-size: 1.2rem;
+        color: $primary-color;
+        margin-bottom: 4px;
+      }
 
-.post-content p {
-    font-size: 0.9rem;
-    color: #6b7280;
-    margin-bottom: 8px;
-}
+      p {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-bottom: 8px;
+      }
+    }
 
-.toggle-comments {
-    background: transparent;
-    border: none;
-    color: #4f46e5;
-    font-size: 0.9rem;
-    cursor: pointer;
-    padding: 4px;
-}
+    .comments {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid $border-color;
 
-.toggle-comments:hover {
-    color: #7c3aed;
-}
+      p {
+        font-size: 0.85rem;
+        color: #6b7280;
+        margin-bottom: 6px;
+      }
+    }
+  }
 
-.comments {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.comments p {
-    font-size: 0.85rem;
-    color: #6b7280;
-    margin-bottom: 6px;
-}
-
-.add-comment {
-    display: flex;
-    gap: 8px;
-    margin-top: 8px;
-}
-
-.add-comment input {
-    flex-grow: 1;
-    background: #f3f4f6;
-    border: none;
-    padding: 8px;
-    border-radius: 6px;
-    color: #1f2937;
-    font-size: 0.9rem;
-}
-
-.add-comment button {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
-.add-comment button:hover {
-    transform: translateY(-2px);
-}
-
-/* Профиль */
-.profile-card {
+  .profile-card {
     background: white;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow;
     text-align: center;
     margin-bottom: 16px;
-}
 
-.profile-card img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin-bottom: 12px;
-    border: 2px solid rgba(79, 70, 229, 0.2);
-}
+    h2 {
+      font-size: 1.5rem;
+      color: $primary-color;
+      margin-bottom: 6px;
+    }
 
-.profile-card h2 {
-    font-size: 1.5rem;
-    color: #1f2937;
-    margin-bottom: 6px;
-}
+    p {
+      font-size: 0.95rem;
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
+  }
 
-.profile-card p {
-    font-size: 0.95rem;
-    color: #6b7280;
-    margin-bottom: 12px;
-}
-
-.tags {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.tags span {
-    background: rgba(79, 70, 229, 0.1);
-    padding: 5px 10px;
-    border-radius: 10px;
-    color: #4f46e5;
-    font-size: 0.85rem;
-}
-
-.tags span:hover {
-    background: rgba(79, 70, 229, 0.2);
-}
-
-.photo-grid {
+  .photo-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
-}
 
-.photo-grid img {
-    width: 100%;
-    border-radius: 10px;
-    object-fit: cover;
-    transition: transform 0.3s;
-}
+    img {
+      width: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+      transition: transform 0.3s;
 
-.photo-grid img:hover {
-    transform: scale(1.03);
-}
+      &:hover {
+        transform: scale(1.03);
+      }
+    }
+  }
 
-/* Карта */
-.map-container {
+  .map-container {
     background: white;
     border-radius: 12px;
     padding: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     height: 100%;
-}
 
-#map {
-    flex-grow: 1;
-    border-radius: 10px;
-    min-height: 300px;
-    width: 100%;
-}
+    #map {
+      flex-grow: 1;
+      border-radius: 10px;
+      min-height: 300px;
+      width: 100%;
+    }
 
-.map-overlay {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    padding: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    max-width: 280px;
-}
+    .map-overlay {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      max-width: 280px;
+    }
+  }
 
-.map-overlay h3 {
-    font-size: 1.1rem;
-    color: #1f2937;
-    margin-bottom: 6px;
-}
-
-.map-overlay p {
-    font-size: 0.9rem;
-    color: #6b7280;
-}
-
-/* Аутентификация */
-.auth-body {
-    background: linear-gradient(135deg, #e0e7ff, #c3dafe);
-
+  .auth-body {
+    background: $background-gradient;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 16px;
-}
+    min-height: calc(100vh - 136px);
+  }
 
-.auth-container {
+  .auth-container {
     background: white;
     border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: $shadow;
     max-width: 500px;
     width: 100%;
-}
+  }
 
-.auth-tabs {
-    display: flex;
-    margin-bottom: 16px;
-}
-
-.tab {
-    background: #f3f4f6;
-    border: none;
-    padding: 10px;
-    font-size: 1rem;
-    color: #1f2937;
-    cursor: pointer;
-    flex: 1;
-    text-align: center;
-    border-radius: 8px 8px 0 0;
-    transition: background 0.3s;
-}
-
-.tab.active {
-    background: white;
-    color: #4f46e5;
-}
-
-.tab:hover {
-    background: #e5e7eb;
-}
-
-.auth-form, .auth-form> form  {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
- 
-
-.auth-form h2 {
-    font-size: 1.5rem;
-    color: #1f2937;
-    text-align: center;
-    margin-bottom: 12px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.form-group label {
-    font-size: 0.9rem;
-    color: #1f2937;
-}
-
-.form-group input {
-    background: #f3f4f6;
-    border: none;
-    padding: 10px;
-    border-radius: 6px;
-    color: #1f2937;
-    font-size: 0.95rem;
-    outline: none;
-}
-
-.form-group input:focus {
-    background: #e5e7eb;
-}
-
-.auth-button {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-.auth-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-}
-
-.form-switch {
-    font-size: 0.9rem;
-    color: #6b7280;
-    text-align: center;
-    margin-top: 8px;
-}
-
-.form-switch a {
-    color: #4f46e5;
-    font-weight: 500;
-}
-
-.form-switch a:hover {
-    text-decoration: underline;
-}
-
-/* Поиск */
-.search-container {
+  .search-container {
     background: white;
     border-radius: 12px;
     padding: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.filter-tags {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-}
-
-.filter-tags .tag {
-    background: #f3f4f6;
-    padding: 6px 12px;
-    border-radius: 10px;
-    color: #1f2937;
-    font-size: 0.9rem;
-    cursor: pointer;
-}
-
-.filter-tags .tag:hover {
-    background: #e5e7eb;
-}
-
-.filter-tags .tag.active {
-    background: linear-gradient(135deg, #4f46e5, #7c3aed);
-    color: white;
-}
-
-.search-results {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
-}
-
-.result-item {
-    background: white;
-    border-radius: 10px;
-    padding: 12px;
-    transition: transform 0.3s;
-}
-
-.result-item:hover {
-    transform: translateY(-4px);
-}
-
-.result-item img {
-    width: 100%;
-    border-radius: 8px;
-    margin-bottom: 8px;
-    object-fit: cover;
-}
-
-.result-info h3 {
-    font-size: 1.1rem;
-    color: #1f2937;
-    margin-bottom: 4px;
-}
-
-.result-info p {
-    font-size: 0.85rem;
-    color: #6b7280;
-    margin-bottom: 8px;
-}
-
-.result-tags {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-}
-
-.result-tags span {
-    background: rgba(79, 70, 229, 0.1);
-    padding: 4px 8px;
-    border-radius: 8px;
-    color: #4f46e5;
-    font-size: 0.8rem;
-}
-
-/* Адаптивность */
-@media (max-width: 1024px) {
-    .header .container {
-        flex-wrap: wrap;
-        gap: 12px;
-    }
+    box-shadow: $shadow;
 
     .search-bar {
-        margin: 0;
-        width: 100%;
-        max-width: none;
-    }
-}
-
-@media (max-width: 768px) {
- 
-    .nav-menu {
-        display: none;
-        position: fixed;
-        top: 0;
-        right: 0;
-        height: 100vh;
-        width: 250px;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        flex-direction: column;
-        padding: 60px 20px 20px;
-        box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-        transform: translateX(100%);
-        transition: transform 0.3s ease;
-        z-index: 1000;
-    }
-
-    .nav-menu.active {
-        display: flex;
-        transform: translateX(0);
-    }
-
-    .nav-menu a {
-        padding: 12px;
-        font-size: 1.1rem;
-    }
-
-    .burger {
-        display: flex;
-    }
-
-    .profile-card img {
-        width: 80px;
-        height: 80px;
-    }
-
-    .photo-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      display: flex;
+      align-items: center;
+      max-width: 400px;
+      flex-grow: 1;
+      margin-bottom: 15px;
     }
 
     .search-results {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+
+      .result-item {
+        background: white;
+        border-radius: 10px;
+        padding: 12px;
+        transition: transform 0.3s;
+
+        &:hover {
+          transform: translateY(-4px);
+        }
+
+        img {
+          width: 100%;
+          border-radius: 8px;
+          margin-bottom: 8px;
+          object-fit: cover;
+        }
+
+        .result-info {
+          h3 {
+            font-size: 1.1rem;
+            color: $primary-color;
+            margin-bottom: 4px;
+          }
+
+          p {
+            font-size: 0.85rem;
+            color: #6b7280;
+            margin-bottom: 8px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@layer utilities {
+  @media (max-width: 1024px) {
+    .header .container {
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .search-bar {
+      margin: 0;
+      width: 100%;
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .photo-grid {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+
+    .search-results {
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     }
 
     .auth-container {
-        padding: 16px;
-    }
-
-    .auth-tabs {
-        flex-direction: row;
+      padding: 16px;
     }
 
     .map-container {
-        padding: 8px;
-    }
+      padding: 8px;
 
-    .map-overlay {
+      .map-overlay {
         width: calc(100% - 32px);
         left: 16px;
-    }
+      }
 
-    #map {
+      #map {
         min-height: 200px;
+      }
     }
+  }
 }
 
+components\AppFooter.vue
+<template>
+    <footer class="footer">
+      <div class="container">
+        <Copyright />
+        <SocialLinks />
+      </div>
+    </footer>
+  </template>
+  
+  <script setup lang="ts">
+  import Copyright from './footer/Copyright.vue';
+  import SocialLinks from './footer/SocialLinks.vue';
+  </script>
+
+components\AppHeader.vue
+<template>
+    <header class="header">
+      <div class="container">
+        <Logo />
+        <nav class="nav">
+          <BurgerMenu v-if="isMobile" :is-open="isMenuOpen" @toggle="toggleMenu" />
+          <NavMenu :is-open="isMenuOpen" @close="closeMenu" :is-mobile="isMobile" />
+        </nav>
+      </div>
+    </header>
+  </template>
+  
+  <script setup lang="ts">
+  import { ref, computed } from 'vue';
+  import Logo from './header/Logo.vue';
+  import NavMenu from './header/NavMenu.vue';
+  import BurgerMenu from './header/BurgerMenu.vue';
+  
+  const isMenuOpen = ref(false);
+  const isMobile = computed(() => window.innerWidth <= 768);
+  
+  function toggleMenu() {
+    isMenuOpen.value = !isMenuOpen.value;
+  }
+  
+  function closeMenu() {
+    isMenuOpen.value = false;
+  }
+  </script>
+
+components\auth\AuthTabs.vue
+<template>
+  <VaTabs v-model="value" grow>
+    <VaTab value="login">Вход</VaTab>
+    <VaTab value="register">Регистрация</VaTab>
+  </VaTabs>
+</template>
+
+<script setup lang="ts">
+import { toRef } from "vue";
+import { VaTabs, VaTab } from "vuestic-ui";
+
+const props = defineProps<{
+  value: "login" | "register";
+}>();
+
+const value = toRef(props.value);
+
+defineEmits(["update:value"]);
+</script>
+
+
+components\auth\LoginForm.vue
+<template>
+  <div class="auth-form">
+    <h2>Вход</h2>
+    <form @submit.prevent="submit">
+      <VaInput
+        v-model="form.email"
+        type="email"
+        label="Эл. почта"
+        placeholder="example@domain.com"
+        required
+        class="mb-4"
+      />
+      <VaInput
+        v-model="form.password"
+        type="password"
+        label="Пароль"
+        placeholder="Введите пароль"
+        required
+        class="mb-4"
+      />
+      <VaButton type="submit" block class="auth-button">Войти</VaButton>
+      <p class="form-switch">
+        Нет аккаунта? <a href="#" @click.prevent="$emit('switch', 'register')">Зарегистрируйтесь</a>
+      </p>
+    </form>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref } from "vue";
+import { VaInput, VaButton } from "vuestic-ui";
+
+const form = ref({
+  email: "",
+  password: "",
+});
+
+function submit() {
+  emit("submit", { ...form.value });
+}
+
+defineEmits<{
+  (e: "submit", value: { email: string; password: string }): void;
+  (e: "switch", tab: "register"): void;
+}>();
+</script>
+
+
+components\auth\RegisterForm.vue
+<template>
+    <div class="auth-form">
+      <h2>Регистрация</h2>
+      <form @submit.prevent="submit">
+        <VaInput
+          v-model="form.username"
+          type="text"
+          label="Имя пользователя"
+          placeholder="Ваш ник"
+          required
+          class="mb-4"
+        />
+        <VaInput
+          v-model="form.email"
+          type="email"
+          label="Эл. почта"
+          placeholder="example@domain.com"
+          required
+          class="mb-4"
+        />
+        <VaInput
+          v-model="form.password"
+          type="password"
+          label="Пароль"
+          placeholder="Придумайте пароль"
+          required
+          class="mb-4"
+        />
+        <VaInput
+          v-model="form.confirmPassword"
+          type="password"
+          label="Подтверждение пароля"
+          placeholder="Повторите пароль"
+          required
+          class="mb-4"
+        />
+        <VaButton type="submit" block class="auth-button">Зарегистрироваться</VaButton>
+        <p class="form-switch">
+          Уже есть аккаунт? <a href="#" @click.prevent="$emit('switch', 'login')">Войдите</a>
+        </p>
+      </form>
+    </div>
+  </template>
+  
+  <script setup lang="ts">
+  import { ref } from 'vue';
+  import { VaInput, VaButton } from 'vuestic-ui';
+  
+  const form = ref({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
+  
+  function submit() {
+    emit('submit', { ...form.value });
+  }
+  
+  defineEmits<{
+    (e: 'submit', value: { username: string; email: string; password: string; confirmPassword: string }): void;
+    (e: 'switch', tab: 'login'): void;
+  }>();
+  </script>
+
+components\footer\Copyright.vue
+<template>
+    <p>© 2025 PhotoStream. Все права защищены.</p>
+  </template>
+  
+  <script setup lang="ts"></script>
+
+components\footer\SocialLinks.vue
+<template>
+    <div class="social-links">
+      <VaButton
+        v-for="link in socialLinks"
+        :key="link.label"
+        :href="link.href"
+        preset="plain"
+        color="primary"
+        class="social-link"
+      >
+        {{ link.label }}
+      </VaButton>
+    </div>
+  </template>
+  
+  <script setup lang="ts">
+  import { VaButton } from 'vuestic-ui';
+  
+  const socialLinks = [
+    { label: 'X', href: '#' },
+    { label: 'Instagram', href: '#' },
+    { label: 'Контакты', href: '#' },
+  ];
+  </script>
+  
+  <style scoped>
+  .social-link {
+    margin-left: 12px;
+  }
+  </style>
+
+components\header\BurgerMenu.vue
+<template>
+    <VaButton
+      preset="plain"
+      icon="menu"
+      class="burger"
+      :class="{ active: isOpen }"
+      @click="$emit('toggle')"
+    />
+  </template>
+  
+  <script setup lang="ts">
+  import { VaButton } from 'vuestic-ui';
+  defineProps<{
+    isOpen: boolean;
+  }>();
+  defineEmits(['toggle']);
+  </script>
+  
+  <style scoped>
+  .burger {
+    display: flex;
+  }
+  </style>
+
+components\header\Logo.vue
+<template>
+  <router-link to="/" class="logo">PhotoStream</router-link>
+</template>
+ 
+
+
+components\header\NavMenu.vue
+<template>
+  <VaDropdown v-model="isOpen" :close-on-click-outside="true" v-if="isMobile">
+    <template #anchor>
+      <span></span>
+    </template>
+    <VaDropdownContent class="nav-menu">
+      <ul>
+        <li v-for="item in navItems" :key="item.path">
+          <router-link :to="item.path" class="nav-link" @click="$emit('close')">
+            <VaIcon :name="item.icon" />
+            {{ item.label }}
+          </router-link>
+        </li>
+        <li v-if="!authStore.isAuthenticated">
+          <router-link to="/auth" class="nav-link" @click="$emit('close')">
+            <VaIcon name="login" />
+            Вход
+          </router-link>
+        </li>
+        <li v-else>
+          <VaButton preset="plain" color="danger" class="nav-link" @click.prevent="logout">
+            <VaIcon name="logout" />
+            Выход
+          </VaButton>
+        </li>
+      </ul>
+    </VaDropdownContent>
+  </VaDropdown>
+  <ul class="nav-menu" v-else>
+    <li v-for="item in navItems" :key="item.path">
+      <router-link :to="item.path" class="nav-link" active-class="active">
+        <VaIcon :name="item.icon" />
+        {{ item.label }}
+      </router-link>
+    </li>
+    <li v-if="!authStore.isAuthenticated">
+      <router-link to="/auth" class="nav-link">
+        <VaIcon name="login" />
+        Вход
+      </router-link>
+    </li>
+    <li v-else>
+      <VaButton preset="plain" color="danger" class="nav-link" @click.prevent="logout">
+        <VaIcon name="logout" />
+        Выход
+      </VaButton>
+    </li>
+  </ul>
+</template>
+
+<script setup lang="ts">
+import { VaDropdown, VaDropdownContent, VaButton, VaIcon } from "vuestic-ui";
+import { useAuthStore } from "../../stores/auth";
+import { useRouter } from "vue-router";
+import { defineProps, toRef } from "vue";
+
+const props = defineProps<{
+  isOpen: boolean;
+  isMobile: boolean;
+}>();
+
+const isOpen = toRef(props.isOpen)
+ 
+
+const emit = defineEmits(["close"]);
+
+const authStore = useAuthStore();
+const router = useRouter();
+
+const navItems = [
+  { path: "/", label: "Лента", icon: "home" },
+  { path: "/search", label: "Поиск", icon: "search" },
+  { path: "/map", label: "Карта", icon: "map" },
+  { path: "/profile", label: "Профиль", icon: "person" },
+];
+
+function logout() {
+  authStore.logout();
+  router.push("/auth");
+  emit("close");
+}
+</script>
+
+<style scoped>
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 16px;
+  list-style: none;
+}
+
+@media (max-width: 768px) {
+  .nav-menu {
+    flex-direction: column;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+}
+</style>
+
+
+components\map\MapContainer.vue
+<template>
+  <section class="map-container">
+    <div id="map" ref="mapContainer"></div>
+    <MapOverlay :post="selectedPost" />
+  </section>
+</template>
+
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted } from "vue";
+import MapOverlay from "./MapOverlay.vue";
+import type { Map } from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css";
+import { usePostStore } from "../../stores/post";
+import { type Post } from "../../stores/post";
+
+const postStore = usePostStore();
+const mapContainer = ref<HTMLElement | null>(null);
+let map: Map | null = null;
+
+defineProps<{
+  selectedPost: Post | null;
+}>();
+const emit = defineEmits<{
+  (e: "update-selected", post: Post): void;
+}>();
+
+onMounted(() => {
+  if (!mapContainer.value) return;
+
+  import("maplibre-gl").then((maplibregl) => {
+    map = new maplibregl.Map({
+      container: mapContainer.value!,
+      style: "https://demotiles.maplibre.org/style.json",
+      center: [0, 0],
+      zoom: 2,
+    });
+
+    map.addControl(new maplibregl.NavigationControl());
+
+    map.on("load", () => {
+      postStore.posts.forEach((post) => {
+        if (post.location) {
+          new maplibregl.Marker()
+            .setLngLat([post.location.lng, post.location.lat])
+            .setPopup(
+              new maplibregl.Popup().setHTML(`<h3>${post.title}</h3><p>${post.description}</p>`)
+            )
+            .addTo(map!)
+            .getElement()
+            .addEventListener("click", () => {
+              emit("update-selected", post);
+            });
+        }
+      });
+    });
+
+    window.addEventListener("resize", () => map?.resize());
+  });
+});
+
+onUnmounted(() => {
+  if (map) {
+    map.remove();
+    map = null;
+  }
+  window.removeEventListener("resize", () => map?.resize());
+});
+</script>
+
+
+components\map\MapOverlay.vue
+<template>
+  <VaCard class="map-overlay" v-if="post">
+    <VaCardTitle>{{ post.title }}</VaCardTitle>
+    <VaCardContent>
+      <p>Местоположение: {{ post.location?.lat }}, {{ post.location?.lng }}</p>
+    </VaCardContent>
+  </VaCard>
+</template>
+
+<script setup lang="ts">
+import { VaCard, VaCardTitle, VaCardContent } from "vuestic-ui";
+import { type Post } from "../../stores/post";
+
+defineProps<{
+  post: Post | null;
+}>();
+</script>
+
+
+components\post\AddComment.vue
+<template>
+    <div class="add-comment">
+      <VaInput
+        v-model="post.newComment"
+        placeholder="Ваш комментарий..."
+        class="flex-grow"
+      />
+      <VaButton @click="postStore.addComment(post.id, authStore.user?.username || 'user')">
+        Отправить
+      </VaButton>
+    </div>
+  </template>
+  
+  <script setup lang="ts">
+  import { VaInput, VaButton } from 'vuestic-ui';
+  import { usePostStore } from '../../stores/post';
+  import { useAuthStore } from '../../stores/auth';
+  import { Post } from '../../stores/post';
+  
+  defineProps<{
+    post: Post;
+  }>();
+  
+  const postStore = usePostStore();
+  const authStore = useAuthStore();
+  </script>
+  
+  <style scoped>
+  .add-comment {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  </style>
+
+components\post\CommentsSection.vue
+<template>
+    <div class="comments" v-if="post.showComments">
+      <p v-for="comment in post.comments" :key="comment.id">
+        <strong>{{ comment.user }}:</strong> {{ comment.text }}
+      </p>
+      <AddComment :post="post" v-if="authStore.isAuthenticated" />
+      <p v-else class="text-gray-500 text-sm">Войдите, чтобы оставить комментарий</p>
+    </div>
+  </template>
+  
+  <script setup lang="ts">
+  import { useAuthStore } from '../../stores/auth';
+  import AddComment from './AddComment.vue';
+  import { Post } from '../../stores/post';
+  
+  defineProps<{
+    post: Post;
+  }>();
+  
+  const authStore = useAuthStore();
+  </script>
+
+components\post\PostContent.vue
+<template>
+    <div class="post-content">
+      <h3>{{ post.title }}</h3>
+      <p>{{ post.description }}</p>
+      <VaButton
+        preset="plain"
+        color="primary"
+        class="toggle-comments"
+        @click="postStore.toggleComments(post.id)"
+      >
+        {{ post.showComments ? 'Скрыть комментарии' : `Комментарии (${post.comments.length})` }}
+      </VaButton>
+    </div>
+  </template>
+  
+  <script setup lang="ts">
+  import { VaButton } from 'vuestic-ui';
+  import { usePostStore } from '../../stores/post';
+  import { Post } from '../../stores/post';
+  
+  defineProps<{
+    post: Post;
+  }>();
+  
+  const postStore = usePostStore();
+  </script>
+
+components\post\PostImage.vue
+<template>
+    <img :src="src" :alt="alt" />
+  </template>
+  
+  <script setup lang="ts">
+  defineProps<{
+    src: string;
+    alt: string;
+  }>();
+  </script>
+
+components\PostCard.vue
+<template>
+    <div class="post">
+      <PostImage :src="post.image" :alt="post.title" />
+      <PostContent :post="post" />
+      <CommentsSection :post="post" />
+    </div>
+  </template>
+  
+  <script setup lang="ts">
+  import PostImage from './post/PostImage.vue';
+  import PostContent from './post/PostContent.vue';
+  import CommentsSection from './post/CommentsSection.vue';
+  import { Post } from '../stores/post';
+  
+  defineProps<{
+    post: Post;
+  }>();
+  </script>
+
+components\profile\PhotoGrid.vue
+<template>
+  <section class="photo-grid">
+    <img v-for="post in posts" :key="post.id" :src="post.image" :alt="post.title" />
+  </section>
+</template>
+
+<script setup lang="ts">
+import { Post } from "../../stores/post";
+
+defineProps<{
+  posts: Post[];
+}>();
+</script>
+
+
+components\profile\ProfileCard.vue
+<template>
+    <section class="profile-card">
+      <VaAvatar src="https://via.placeholder.com/120" size="large" />
+      <h2>@{{ user?.username || 'traveler' }}</h2>
+      <p>Люблю природу и фотографию. Исследую мир!</p>
+      <div class="tags">
+        <VaChip v-for="tag in profileTags" :key="tag" color="primary">
+          #{{ tag }}
+        </VaChip>
+      </div>
+    </section>
+  </template>
+  
+  <script setup lang="ts">
+  import { VaAvatar, VaChip } from 'vuestic-ui';
+  
+  defineProps<{
+    user: { username: string } | null;
+  }>();
+  
+  const profileTags = ['природа', 'путешествия', 'фото'];
+  </script>
+
+components\search\FilterTags.vue
+<template>
+  <div class="filter-tags">
+    <VaChip
+      v-for="tag in tags"
+      :key="tag"
+      :color="value === tag ? 'primary' : 'background'"
+      :outline="value !== tag"
+      @click="$emit('filter', tag)"
+    >
+      {{ tag }}
+    </VaChip>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { VaChip } from "vuestic-ui";
+
+defineProps<{
+  tags: string[];
+  value: string | null;
+}>();
+defineEmits(["filter"]);
+</script>
+
+<style scoped>
+.filter-tags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+</style>
+
+
+components\search\ResultItem.vue
+<template>
+  <div class="result-item">
+    <img :src="post.image" :alt="post.title" />
+    <div class="result-info">
+      <h3>{{ post.title }}</h3>
+      <p>{{ post.description }}, @{{ post.user }}</p>
+      <div class="result-tags">
+        <VaChip v-for="tag in post.tags" :key="tag" size="small" color="primary">
+          #{{ tag }}
+        </VaChip>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { VaChip } from "vuestic-ui";
+import { Post } from "../../stores/post";
+
+defineProps<{
+  post: Post;
+}>();
+</script>
+
+
+components\search\SearchBar.vue
+<template>
+  <div class="search-bar">
+    <VaInput v-model="value" placeholder="Поиск: закат на пляже..." class="flex-grow" />
+    <VaButton @click="$emit('search')">Найти</VaButton>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { toRef } from "vue";
+import { VaInput, VaButton } from "vuestic-ui";
+
+const props = defineProps<{
+  value: string;
+}>();
+const value = toRef(props.value);
+
+defineEmits(["update:value", "search"]);
+</script>
+
+
+components\search\SearchResults.vue
+<template>
+  <div class="search-results">
+    <ResultItem v-for="post in posts" :key="post.id" :post="post" />
+  </div>
+</template>
+
+<script setup lang="ts">
+import ResultItem from "./ResultItem.vue";
+import { Post } from "../../stores/post";
+
+defineProps<{
+  posts: Post[];
+}>();
+</script>
+
+
+main.ts
+import { createVuestic } from 'vuestic-ui';
+import 'vuestic-ui/styles/essential.css';
+import 'vuestic-ui/styles/typography.css';
+import './assets/styles.scss';
+
+import { createApp } from 'vue';
+import { createPinia } from 'pinia';
+
+import App from './App.vue';
+import router from './router';
+
+const app = createApp(App);
+
+app.use(createPinia());
+app.use(router);
+app.use(createVuestic());
+app.mount('#app');
+
+router\index.ts
+import { createRouter, createWebHistory } from 'vue-router';
+
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'feed',
+      component: () => import('../views/FeedView.vue'),
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: () => import('../views/SearchView.vue'),
+    },
+    {
+      path: '/map',
+      name: 'map',
+      component: () => import('../views/MapView.vue'),
+    },
+    {
+      path: '/profile',
+      name: 'profile',
+      component: () => import('../views/ProfileView.vue'),
+    },
+    {
+      path: '/auth',
+      name: 'auth',
+      component: () => import('../views/AuthView.vue'),
+    },
+  ],
+});
+
+export default router;
+
+stores\auth.ts
+import { defineStore } from 'pinia';
+import axios from 'axios';
+import { ref } from 'vue';
+
+export const useAuthStore = defineStore('auth', () => {
+  const user = ref(null);
+  const isAuthenticated = ref(false);
+
+  async function login(email: string, password: string) {
+    try {
+      const response = await axios.post('/api/login', { email, password });
+      user.value = response.data.user;
+      isAuthenticated.value = true;
+      return true;
+    } catch (error) {
+      console.error('Login failed:', error);
+      return false;
+    }
+  }
+
+  async function register(username: string, email: string, password: string) {
+    try {
+      const response = await axios.post('/api/register', { username, email, password });
+      user.value = response.data.user;
+      isAuthenticated.value = true;
+      return true;
+    } catch (error) {
+      console.error('Registration failed:', error);
+      return false;
+    }
+  }
+
+  function logout() {
+    user.value = null;
+    isAuthenticated.value = false;
+  }
+
+  return { user, isAuthenticated, login, register, logout };
+});
+
+stores\post.ts
+import { defineStore } from 'pinia';
+import { ref } from 'vue';
+import axios from 'axios';
+
+export interface Comment {
+  id: number;
+  user: string;
+  text: string;
+}
+
+export interface Post {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  comments: Comment[];
+  showComments: boolean;
+  newComment: string;
+  tags?: string[];
+  location?: { lat: number; lng: number };
+  user?: string;
+}
+
+export const usePostStore = defineStore('post', () => {
+  const posts = ref<Post[]>([
+    {
+      id: 1,
+      title: 'Закат на пляже',
+      description: 'Красивый вечер у моря, 12 апреля 2025',
+      image: 'https://via.placeholder.com/800x500',
+      comments: [
+        { id: 1, user: 'user1', text: 'Потрясающе!' },
+        { id: 2, user: 'user2', text: 'Хочу туда!' },
+      ],
+      showComments: false,
+      newComment: '',
+      tags: ['закат', 'пляж'],
+      location: { lat: 12.34, lng: 56.78 },
+      user: 'traveler',
+    },
+    {
+      id: 2,
+      title: 'Горы в тумане',
+      description: 'Утренний пейзаж, 10 апреля 2025',
+      image: 'https://via.placeholder.com/800x500',
+      comments: [{ id: 1, user: 'user3', text: 'Какая атмосфера!' }],
+      showComments: false,
+      newComment: '',
+      tags: ['природа', 'горы'],
+      user: 'mountain_lover',
+    },
+    {
+      id: 3,
+      title: 'Море и закат',
+      description: '10 апреля 2025',
+      image: 'https://via.placeholder.com/300',
+      comments: [],
+      showComments: false,
+      newComment: '',
+      tags: ['закат', 'море'],
+      user: 'sea_lover',
+    },
+  ]);
+
+  async function fetchPosts() {
+    try {
+      const response = await axios.get('/api/posts');
+      posts.value = response.data.map((post: Post) => ({
+        ...post,
+        showComments: false,
+        newComment: '',
+      }));
+    } catch (error) {
+      console.error('Failed to fetch posts:', error);
+    }
+  }
+
+  function toggleComments(postId: number) {
+    const post = posts.value.find((p) => p.id === postId);
+    if (post) post.showComments = !post.showComments;
+  }
+
+  async function addComment(postId: number, user: string) {
+    const post = posts.value.find((p) => p.id === postId);
+    if (post && post.newComment.trim()) {
+      const newComment = {
+        id: post.comments.length + 1,
+        user,
+        text: post.newComment,
+      };
+      try {
+        await axios.post(`/api/posts/${postId}/comments`, newComment);
+        post.comments.push(newComment);
+        post.newComment = '';
+      } catch (error) {
+        console.error('Failed to add comment:', error);
+      }
+    }
+  }
+
+  return { posts, fetchPosts, toggleComments, addComment };
+});
+
+views\AuthView.vue
+<template>
+    <main class="auth-body">
+      <section class="auth-container">
+        <AuthTabs v-model="activeTab" />
+        <LoginForm v-if="activeTab === 'login'" @submit="handleLogin" />
+        <RegisterForm v-if="activeTab === 'register'" @submit="handleRegister" />
+      </section>
+    </main>
+  </template>
+  
+  <script setup lang="ts">
+  import { ref } from 'vue';
+  import { useAuthStore } from '../stores/auth';
+  import { useRouter } from 'vue-router';
+  import AuthTabs from '../components/auth/AuthTabs.vue';
+  import LoginForm from '../components/auth/LoginForm.vue';
+  import RegisterForm from '../components/auth/RegisterForm.vue';
+  
+  const activeTab = ref<'login' | 'register'>('login');
+  const authStore = useAuthStore();
+  const router = useRouter();
+  
+  async function handleLogin({ email, password }: { email: string; password: string }) {
+    try {
+      if (await authStore.login(email, password)) {
+        router.push('/');
+      } else {
+        alert('Ошибка входа');
+      }
+    } catch {
+      alert('Ошибка входа');
+    }
+  }
+  
+  async function handleRegister({
+    username,
+    email,
+    password,
+    confirmPassword,
+  }: {
+    username: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }) {
+    if (password !== confirmPassword) {
+      alert('Пароли не совпадают!');
+      return;
+    }
+    try {
+      if (await authStore.register(username, email, password)) {
+        router.push('/');
+      } else {
+        alert('Ошибка регистрации');
+      }
+    } catch {
+      alert('Ошибка регистрации');
+    }
+  }
+  </script>
+
+views\FeedView.vue
+<template>
+    <main class="container">
+      <section class="feed">
+        <PostCard v-for="post in postStore.posts" :key="post.id" :post="post" />
+      </section>
+    </main>
+  </template>
+  
+  <script setup lang="ts">
+  import { usePostStore } from '../stores/post';
+  import { onMounted } from 'vue';
+  import PostCard from '../components/PostCard.vue';
+  
+  const postStore = usePostStore();
+  
+  onMounted(() => {
+    postStore.fetchPosts();
+  });
+  </script>
+
+views\MapView.vue
+<template>
+    <main class="container">
+      <MapContainer :selected-post="selectedPost" @update-selected="selectedPost = $event" />
+    </main>
+  </template>
+  
+  <script setup lang="ts">
+  import { ref } from 'vue';
+  import { usePostStore } from '../stores/post';
+  import MapContainer from '../components/map/MapContainer.vue';
+  import { Post } from '../stores/post';
+  
+  const postStore = usePostStore();
+  const selectedPost = ref<Post | null>(postStore.posts[0]);
+  </script>
+
+views\ProfileView.vue
+<template>
+    <main class="container">
+      <ProfileCard :user="user" />
+      <PhotoGrid :posts="userPosts" />
+    </main>
+  </template>
+  
+  <script setup lang="ts">
+  import { computed } from 'vue';
+  import { useAuthStore } from '../stores/auth';
+  import { usePostStore } from '../stores/post';
+  import ProfileCard from '../components/profile/ProfileCard.vue';
+  import PhotoGrid from '../components/profile/PhotoGrid.vue';
+  
+  const authStore = useAuthStore();
+  const postStore = usePostStore();
+  
+  const user = computed(() => authStore.user);
+  const userPosts = computed(() =>
+    postStore.posts.filter((post) => post.user === user.value?.username)
+  );
+  </script>
+
+views\SearchView.vue
+<template>
+    <main class="container">
+      <section class="search-container mb-4">
+        <h2>Поиск фотографий</h2>
+        <SearchBar v-model="searchQuery" @search="search" />
+      </section>
+      <section class="search-container">
+        <FilterTags v-model="activeTag" :tags="tags" @filter="filterByTag" />
+        <SearchResults :posts="filteredPosts" />
+      </section>
+    </main>
+  </template>
+  
+  <script setup lang="ts">
+  import { ref, computed } from 'vue';
+  import { usePostStore } from '../stores/post';
+  import SearchBar from '../components/search/SearchBar.vue';
+  import FilterTags from '../components/search/FilterTags.vue';
+  import SearchResults from '../components/search/SearchResults.vue';
+  
+  const postStore = usePostStore();
+  const searchQuery = ref('');
+  const activeTag = ref<string | null>(null);
+  
+  const tags = computed(() => {
+    const allTags = new Set<string>();
+    postStore.posts.forEach((post) => {
+      post.tags?.forEach((tag) => allTags.add(tag));
+    });
+    return Array.from(allTags);
+  });
+  
+  const filteredPosts = computed(() => {
+    let filtered = postStore.posts;
+  
+    if (searchQuery.value) {
+      const query = searchQuery.value.toLowerCase();
+      filtered = filtered.filter(
+        (post) =>
+          post.title.toLowerCase().includes(query) ||
+          post.tags?.some((tag) => tag.toLowerCase().includes(query))
+      );
+    }
+  
+    if (activeTag.value) {
+      filtered = filtered.filter((post) => post.tags?.includes(activeTag.value!));
+    }
+  
+    return filtered;
+  });
+  
+  function search() {
+    activeTag.value = null;
+  }
+  
+  function filterByTag(tag: string) {
+    activeTag.value = activeTag.value === tag ? null : tag;
+    searchQuery.value = '';
+  }
+  </script>

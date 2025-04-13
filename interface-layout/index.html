@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лента фотографий</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Хедер -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">PhotoStream</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Поиск: закат на пляже...">
+                <button> <a href="search.html">Найти</a></button>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html" class="active">Лента</a></li>
+                    <li><a href="map.html">Карта</a></li>
+                    <li><a href="profile.html">Профиль</a></li>
+                    <li><a href="auth.html" class="active">Вход</a></li>
+                </ul>
+                <div class="burger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="container">
+        <section class="feed">
+            <div class="post">
+                <img src="https://via.placeholder.com/800x500" alt="Фото">
+                <div class="post-content">
+                    <h3>Закат на пляже</h3>
+                    <p>Красивый вечер у моря, 12 апреля 2025</p>
+                    <button class="toggle-comments">Комментарии (2)</button>
+                    <div class="comments" style="display: none;">
+                        <p><strong>user1:</strong> Потрясающе!</p>
+                        <p><strong>user2:</strong> Хочу туда!</p>
+                        <div class="add-comment">
+                            <input type="text" placeholder="Ваш комментарий...">
+                            <button>Отправить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="post">
+                <img src="https://via.placeholder.com/800x500" alt="Фото">
+                <div class="post-content">
+                    <h3>Горы в тумане</h3>
+                    <p>Утренний пейзаж, 10 апреля 2025</p>
+                    <button class="toggle-comments">Комментарии (1)</button>
+                    <div class="comments" style="display: none;">
+                        <p><strong>user3:</strong> Какая атмосфера!</p>
+                        <div class="add-comment">
+                            <input type="text" placeholder="Ваш комментарий...">
+                            <button>Отправить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 PhotoStream. Все права защищены.</p>
+            <div class="social-links">
+                <a href="#">X</a>
+                <a href="#">Instagram</a>
+                <a href="#">Контакты</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

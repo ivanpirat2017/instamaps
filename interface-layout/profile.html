@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Хедер -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">PhotoStream</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Поиск: закат на пляже...">
+                <button> <a href="search.html">Найти</a></button>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Лента</a></li>
+                    <li><a href="map.html">Карта</a></li>
+                    <li><a href="profile.html" class="active">Профиль</a></li>
+                    <li><a href="auth.html" class="active">Вход</a></li>
+                </ul>
+                <div class="burger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="container">
+        <section class="profile-card">
+            <img src="https://via.placeholder.com/120" alt="Аватар">
+            <h2>@traveler</h2>
+            <p>Люблю природу и фотографию. Исследую мир!</p>
+            <div class="tags">
+                <span>#природа</span>
+                <span>#путешествия</span>
+                <span>#фото</span>
+            </div>
+        </section>
+        <section class="photo-grid">
+            <img src="https://via.placeholder.com/300" alt="Фото 1">
+            <img src="https://via.placeholder.com/300" alt="Фото 2">
+            <img src="https://via.placeholder.com/300" alt="Фото 3">
+            <img src="https://via.placeholder.com/300" alt="Фото 4">
+            <img src="https://via.placeholder.com/300" alt="Фото 5">
+            <img src="https://via.placeholder.com/300" alt="Фото 6">
+        </section>
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 PhotoStream. Все права защищены.</p>
+            <div class="social-links">
+                <a href="#">X</a>
+                <a href="#">Instagram</a>
+                <a href="#">Контакты</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход и регистрация</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Хедер -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">PhotoStream</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Поиск: закат на пляже...">
+                <button> <a href="search.html">Найти</a></button>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Лента</a></li>
+                    <li><a href="map.html">Карта</a></li>
+                    <li><a href="profile.html">Профиль</a></li>
+                    <li><a href="auth.html" class="active">Вход</a></li>
+                </ul>
+                <div class="burger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="container">
+        <div class="auth-body">
+            <section class="auth-container">
+                <div class="auth-tabs">
+                    <button class="tab active" data-tab="login">Вход</button>
+                    <button class="tab" data-tab="register">Регистрация</button>
+                </div>
+                <div class="auth-form" id="login">
+                    <h2>Вход</h2>
+                    <form class="auth-form">
+                        <div class="form-group">
+                            <label for="login-email">Эл. почта</label>
+                            <input type="email" id="login-email" placeholder="example@domain.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Пароль</label>
+                            <input type="password" id="login-password" placeholder="Введите пароль" required>
+                        </div>
+                        <button type="submit" class="auth-button">Войти</button>
+                        <p class="form-switch">Нет аккаунта? <a href="#" data-tab="register">Зарегистрируйтесь</a></p>
+                    </form>
+                </div>
+                <div class="auth-form" id="register" style="display: none;">
+                    <h2>Регистрация</h2>
+                    <form>
+                        <div class="form-group">
+                            <label for="register-username">Имя пользователя</label>
+                            <input type="text" id="register-username" placeholder="Ваш ник" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-email">Эл. почта</label>
+                            <input type="email" id="register-email" placeholder="example@domain.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Пароль</label>
+                            <input type="password" id="register-password" placeholder="Придумайте пароль" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-confirm-password">Подтверждение пароля</label>
+                            <input type="password" id="register-confirm-password" placeholder="Повторите пароль"
+                                required>
+                        </div>
+                        <button type="submit" class="auth-button">Зарегистрироваться</button>
+                        <p class="form-switch">Уже есть аккаунт? <a href="#" data-tab="login">Войдите</a></p>
+                    </form>
+                </div>
+            </section>
+        </div>
+
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 PhotoStream. Все права защищены.</p>
+            <div class="social-links">
+                <a href="#">X</a>
+                <a href="#">Instagram</a>
+                <a href="#">Контакты</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск фотографий</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Хедер -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">PhotoStream</div>
+            <div class="search-bar">
+                <input type="text" placeholder="Поиск: закат на пляже..." value="закат">
+                <button> <a href="search.html">Найти</a></button>
+            </div>
+            <nav class="nav">
+                <ul>
+                    <li><a href="index.html">Лента</a></li>
+                    <li><a href="map.html">Карта</a></li>
+                    <li><a href="profile.html">Профиль</a></li>
+                    <li><a href="auth.html">Вход</a></li>
+                </ul>
+                <div class="burger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="container">
+        <section class="search-container">
+            <div class="filter-tags">
+                <span class="tag active" data-tag="закат">Закат</span>
+                <span class="tag" data-tag="пляж">Пляж</span>
+                <span class="tag" data-tag="природа">Природа</span>
+                <span class="tag" data-tag="море">Море</span>
+            </div>
+            <div class="search-results">
+                <div class="result-item">
+                    <img src="https://via.placeholder.com/300" alt="Закат на пляже">
+                    <div class="result-info">
+                        <h3>Закат на пляже</h3>
+                        <p>12 апреля 2025, @traveler</p>
+                        <div class="result-tags">
+                            <span>#закат</span>
+                            <span>#пляж</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <img src="https://via.placeholder.com/300" alt="Море и закат">
+                    <div class="result-info">
+                        <h3>Море и закат</h3>
+                        <p>10 апреля 2025, @sea_lover</p>
+                        <div class="result-tags">
+                            <span>#закат</span>
+                            <span>#море</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 PhotoStream. Все права защищены.</p>
+            <div class="social-links">
+                <a href="#">X</a>
+                <a href="#">Instagram</a>
+                <a href="#">Контакты</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

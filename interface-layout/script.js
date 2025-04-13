@@ -1,10 +1,18 @@
 // Бургер-меню
 const burger = document.querySelector('.burger');
-const nav = document.querySelector('.nav ul');
+const navMenu = document.querySelector('.nav-menu');
 
 burger.addEventListener('click', () => {
     burger.classList.toggle('active');
-    nav.classList.toggle('active');
+    navMenu.classList.toggle('active');
+});
+
+// Закрытие меню при клике на ссылку
+document.querySelectorAll('.nav-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+        burger.classList.remove('active');
+        navMenu.classList.remove('active');
+    });
 });
 
 // Сворачивание комментариев
@@ -14,8 +22,8 @@ document.querySelectorAll('.toggle-comments').forEach(button => {
         const isHidden = comments.style.display === 'none' || !comments.style.display;
 
         comments.style.display = isHidden ? 'block' : 'none';
-        button.textContent = isHidden 
-            ? `Скрыть комментарии` 
+        button.textContent = isHidden
+            ? `Скрыть комментарии`
             : `Комментарии (${comments.querySelectorAll('p').length})`;
     });
 });
@@ -78,7 +86,6 @@ document.querySelectorAll('.auth-form form').forEach(form => {
 
         if (valid) {
             alert(form.id === 'login' ? 'Вход выполнен!' : 'Регистрация успешна!');
-            // Здесь можно добавить отправку данных на сервер
         }
     });
 });

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Карта фотографий</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link href="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.css" rel="stylesheet" />
 </head>
 
@@ -14,22 +15,19 @@
     <header class="header">
         <div class="container">
             <div class="logo">PhotoStream</div>
-            <div class="search-bar">
-                <input type="text" placeholder="Поиск: закат на пляже...">
-                <button> <a href="search.html">Найти</a></button>
-            </div>
             <nav class="nav">
-                <ul>
-                    <li><a href="index.html">Лента</a></li>
-                    <li><a href="map.html" class="active">Карта</a></li>
-                    <li><a href="profile.html">Профиль</a></li>
-                    <li><a href="auth.html">Вход</a></li>
-                </ul>
                 <div class="burger">
                     <span></span>
                     <span></span>
                     <span></span>
                 </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Лента</a></li>
+                    <li><a href="search.html"><i class="fas fa-home"></i> Поиск</a></li>
+                    <li><a href="map.html"><i class="fas fa-map"></i> Карта</a></li>
+                    <li><a href="profile.html"><i class="fas fa-user"></i> Профиль</a></li>
+                    <li><a href="auth.html" class="active"><i class="fas fa-sign-in-alt"></i> Вход</a></li>
+                </ul>
             </nav>
         </div>
     </header>
@@ -60,18 +58,33 @@
     <script src="https://unpkg.com/maplibre-gl@4.7.0/dist/maplibre-gl.js"></script>
     <script src="script.js"></script>
     <script>
-        const map = new maplibregl.Map({
-            container: 'map',
-            style: 'https://demotiles.maplibre.org/style.json',
-            center: [0, 0],
-            zoom: 2
+        // Проверка загрузки MapLibre GL
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof maplibregl === 'undefined') {
+                console.error('MapLibre GL не загружен');
+                return;
+            }
+
+            const map = new maplibregl.Map({
+                container: 'map',
+                style: 'https://demotiles.maplibre.org/style.json',
+                center: [0, 0],
+                zoom: 2
+            });
+
+            map.on('load', () => {
+                map.addControl(new maplibregl.NavigationControl());
+
+                new maplibregl.Marker()
+                    .setLngLat([12.34, 56.78])
+                    .addTo(map);
+            });
+
+            // Обновление размеров карты при изменении окна
+            window.addEventListener('resize', () => {
+                map.resize();
+            });
         });
-
-        map.addControl(new maplibregl.NavigationControl());
-
-        new maplibregl.Marker()
-            .setLngLat([12.34, 56.78])
-            .addTo(map);
     </script>
 </body>
 

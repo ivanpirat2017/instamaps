@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Профиль пользователя</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 
 <body>
@@ -13,22 +14,20 @@
     <header class="header">
         <div class="container">
             <div class="logo">PhotoStream</div>
-            <div class="search-bar">
-                <input type="text" placeholder="Поиск: закат на пляже...">
-                <button> <a href="search.html">Найти</a></button>
-            </div>
+ 
             <nav class="nav">
-                <ul>
-                    <li><a href="index.html">Лента</a></li>
-                    <li><a href="map.html">Карта</a></li>
-                    <li><a href="profile.html" class="active">Профиль</a></li>
-                    <li><a href="auth.html" class="active">Вход</a></li>
-                </ul>
                 <div class="burger">
                     <span></span>
                     <span></span>
                     <span></span>
                 </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Лента</a></li>
+                    <li><a href="search.html"><i class="fas fa-home"></i> Поиск</a></li>
+                    <li><a href="map.html"><i class="fas fa-map"></i> Карта</a></li>
+                    <li><a href="profile.html"><i class="fas fa-user"></i> Профиль</a></li>
+                    <li><a href="auth.html" class="active"><i class="fas fa-sign-in-alt"></i> Вход</a></li>
+                </ul>
             </nav>
         </div>
     </header>
@@ -58,7 +57,7 @@
     <!-- Футер -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 PhotoStream. Все права защищены.</p>
+            <p>© 2025 PhotoStream. Все права защищены.</p>
             <div class="social-links">
                 <a href="#">X</a>
                 <a href="#">Instagram</a>

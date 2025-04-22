@@ -1,7 +1,6 @@
 <template>
   <section class="map-container">
     <div id="map" ref="mapContainer"></div>
-    <MapOverlay :post="selectedPost" />
   </section>
 </template>
 
@@ -41,17 +40,31 @@ onMounted(() => {
 
       map.on("load", () => {
         postStore.posts.forEach((post) => {
-          if (post.location) {
-            new maplibregl.Marker()
+          if (post.location && post.image) {
+            // Создаём кастомный маркер с миниатюрой
+            const el = document.createElement("div");
+            el.className = "custom-marker";
+            el.style.width = "48px";
+            el.style.height = "48px";
+            el.style.borderRadius = "50%";
+            el.style.overflow = "hidden";
+            el.style.boxShadow = "0 2px 8px rgba(0,0,0,0.15)";
+            el.style.border = "2px solid #fff";
+            el.style.background = "#fff";
+            el.style.cursor = "pointer";
+            const img = document.createElement("img");
+            img.src = post.image;
+            img.alt = post.title;
+            img.style.width = "100%";
+            img.style.height = "100%";
+            img.style.objectFit = "cover";
+            el.appendChild(img);
+            el.addEventListener("click", () => {
+              emit("update-selected", post);
+            });
+            new maplibregl.Marker({ element: el })
               .setLngLat([post.location.lng, post.location.lat])
-              .setPopup(
-                new maplibregl.Popup().setHTML(`<h3>${post.title}</h3><p>${post.description}</p>`)
-              )
-              .addTo(map!)
-              .getElement()
-              .addEventListener("click", () => {
-                emit("update-selected", post);
-              });
+              .addTo(map!);
           }
         });
       });
@@ -108,5 +121,14 @@ onUnmounted(() => {
     width: calc(100% - 32px);
     left: 16px;
   }
+}
+
+.custom-marker {
+  transition: transform 0.2s;
+}
+.custom-marker:hover {
+  transform: scale(1.15);
+  z-index: 10;
+  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.25);
 }
 </style>

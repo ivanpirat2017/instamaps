@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col min-h-screen" :class="{ dark: themeStore.isDarkMode }">
+  <div class="flex flex-col" :class="{ dark: themeStore.isDarkMode }">
     <AppHeader />
     <router-view v-slot="{ Component }">
       <Suspense>

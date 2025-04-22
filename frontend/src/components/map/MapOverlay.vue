@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { VaCard, VaCardTitle, VaCardContent } from "vuestic-ui";
 import { type Post } from "../../stores/post";
- 
+
 defineProps<{
   post: Post | null;
 }>();

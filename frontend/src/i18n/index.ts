@@ -3,6 +3,7 @@ import { createI18n } from "vue-i18n";
 const messages = {
   en: {
     app: {
+      searchPhotos:"Search photos",
       title: "PhotoStream",
       login: "Login",
       register: "Register",
@@ -39,6 +40,7 @@ const messages = {
   },
   ru: {
     app: {
+      searchPhotos:"Поиск фото",
       title: "PhotoStream",
       login: "Вход",
       register: "Регистрация",

@@ -71,3 +71,42 @@ onUnmounted(() => {
   window.removeEventListener("resize", () => map?.resize());
 });
 </script>
+
+<style scoped>
+.map-container {
+  box-shadow: var(--shadow);
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+#map {
+  flex-grow: 1;
+  border-radius: 10px;
+  min-height: 300px;
+  width: 100%;
+}
+
+.map-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  max-width: 280px;
+}
+
+@media (max-width: 768px) {
+  .map-container {
+    padding: 8px;
+  }
+
+  #map {
+    min-height: 200px;
+  }
+
+  .map-overlay {
+    width: calc(100% - 32px);
+    left: 16px;
+  }
+}
+</style>

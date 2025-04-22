@@ -12,9 +12,28 @@
 </template>
 
 <script setup lang="ts">
-import {type Post } from '../../stores/post';
+import { type Post } from "../../stores/post";
 
 defineProps<{
   posts: Post[];
 }>();
 </script>
+
+<style scoped>
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+
+  img {
+    width: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+    transition: transform 0.3s;
+
+    &:hover {
+      transform: scale(1.03);
+    }
+  }
+}
+</style>

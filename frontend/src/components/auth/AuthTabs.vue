@@ -1,10 +1,10 @@
 <template>
   <div class="AuthTabs">
     <span :class="value == 'login' ? 'AuthTabsActive' : 'AuthTabsDisabled'" @click="updateValue('login')">{{
-      $t("app.login")
+      $t("app.loginTitle")
     }}</span>
     <span :class="value == 'register' ? 'AuthTabsActive' : 'AuthTabsDisabled'" @click="updateValue('register')">{{
-      $t("app.register")
+      $t("app.registerTitle")
     }}</span>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <template>
   <div class="auth-form">
-    <h2>{{ $t("app.register") }}</h2>
+    <h2>{{ $t("app.registerTitle") }}</h2>
     <form @submit.prevent="submit">
       <VaInput
         v-model="form.username"
@@ -110,3 +110,15 @@ const emit = defineEmits<{
   (e: "switch", tab: "login"): void;
 }>();
 </script>
+<style lang="scss" scoped>
+.form-switch {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+  a {
+    color: var(--accent-color);
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}
+</style>

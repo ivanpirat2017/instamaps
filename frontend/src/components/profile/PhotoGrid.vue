@@ -1,11 +1,11 @@
 <template>
   <section class="photo-grid">
-    <div v-for="post in posts" :key="post.id" class="photo-item">
+    <router-link v-for="post in posts" :key="post.id" :to="`/post/${post.id}`" class="photo-item">
       <img v-lazy="post.image" :alt="post.title" loading="lazy" decoding="async" />
       <div class="photo-caption">
         <span>{{ post.title }}</span>
       </div>
-    </div>
+    </router-link>
   </section>
 </template>
 

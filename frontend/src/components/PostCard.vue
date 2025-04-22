@@ -1,9 +1,11 @@
 <template>
-  <div class="post" v-if="post" role="article">
-    <PostImage :src="post.image" :alt="post.title" />
-    <PostContent :post="post" />
-    <CommentsSection :post="post" />
-  </div>
+  <router-link v-if="post" :to="`/post/${post.id}`" class="post-link">
+    <div class="post" role="article">
+      <PostImage :src="post.image" :alt="post.title" />
+      <PostContent :post="post" />
+      <CommentsSection :post="post" />
+    </div>
+  </router-link>
   <div v-else class="post skeleton" style="height: 400px"></div>
 </template>
 

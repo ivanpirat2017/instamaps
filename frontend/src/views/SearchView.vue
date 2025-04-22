@@ -1,12 +1,40 @@
 <template>
   <main class="container">
-    <section class="search-container mb-4">
-      <h2>{{ $t("app.searchPhotos") }}</h2>
+    <section class="search-header">
+      <h2 class="search-title">{{ $t("app.searchPhotos") }}</h2>
       <SearchBar v-model="searchQuery" @search="search" />
     </section>
-    <section class="search-container">
-      <FilterTags v-model="activeTag" :tags="tags" @filter="filterByTag" />
-      <SearchResults :posts="filteredPosts" />
+
+    <section class="search-content">
+      <div class="search-filters">
+        <h3 class="filters-title">Фильтры</h3>
+        <FilterTags v-model="activeTag" :tags="tags" @filter="filterByTag" />
+      </div>
+
+      <div class="search-results-wrapper">
+        <div class="results-header">
+          <h3 class="results-title">Результаты ({{ filteredPosts.length }})</h3>
+          <div class="results-sort">
+            <VaButton
+              preset="plain"
+              :color="sortBy === 'date' ? 'primary' : 'secondary'"
+              @click="sortBy = 'date'"
+            >
+              <VaIcon name="schedule" />
+              По дате
+            </VaButton>
+            <VaButton
+              preset="plain"
+              :color="sortBy === 'popular' ? 'primary' : 'secondary'"
+              @click="sortBy = 'popular'"
+            >
+              <VaIcon name="favorite" />
+              Популярные
+            </VaButton>
+          </div>
+        </div>
+        <SearchResults :posts="sortedPosts" />
+      </div>
     </section>
   </main>
 </template>
@@ -18,11 +46,13 @@ import SearchBar from "../components/search/SearchBar.vue";
 import FilterTags from "../components/search/FilterTags.vue";
 import SearchResults from "../components/search/SearchResults.vue";
 import { useI18n } from "vue-i18n";
-const { t } = useI18n();
+import { VaButton, VaIcon } from "vuestic-ui";
 
+const { t } = useI18n();
 const postStore = usePostStore();
 const searchQuery = ref("");
 const activeTag = ref<string | null>(null);
+const sortBy = ref<"date" | "popular">("date");
 
 const tags = computed(() => {
   const allTags = new Set<string>();
@@ -51,6 +81,14 @@ const filteredPosts = computed(() => {
   return filtered;
 });
 
+const sortedPosts = computed(() => {
+  const posts = [...filteredPosts.value];
+  if (sortBy.value === "popular") {
+    return posts.sort((a, b) => (b.comments?.length || 0) - (a.comments?.length || 0));
+  }
+  return posts.reverse(); // По умолчанию сортируем по дате (id) в обратном порядке
+});
+
 function search() {
   activeTag.value = null;
 }
@@ -61,7 +99,7 @@ function filterByTag(tag: string) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -69,72 +107,70 @@ function filterByTag(tag: string) {
   width: 100%;
 }
 
-.search-container {
+.search-header {
+  margin-bottom: 24px;
+
+  .search-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 16px;
+  }
+}
+
+.search-content {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: 250px 1fr;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.search-filters {
+  background: var(--white-transparent);
   border-radius: 12px;
   padding: 16px;
   box-shadow: var(--shadow);
+  height: fit-content;
 
-  .search-bar {
-    display: flex;
-    align-items: center;
-    max-width: 400px;
-    flex-grow: 1;
-    margin-bottom: 15px;
+  .filters-title {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+    margin-bottom: 16px;
   }
+}
 
-  .search-results {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
+.search-results-wrapper {
+  .results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
 
-    .result-item {
-      border-radius: 10px;
-      padding: 12px;
-      transition: transform 0.3s;
+    .results-title {
+      font-size: 1.2rem;
+      color: var(--primary-color);
+    }
 
-      &:hover {
-        transform: translateY(-4px);
-      }
-
-      img {
-        width: 100%;
-        border-radius: 8px;
-        margin-bottom: 8px;
-        object-fit: cover;
-      }
-
-      .result-info {
-        h3 {
-          font-size: 1.1rem;
-          color: var(--primary-color);
-          margin-bottom: 4px;
-        }
-
-        p {
-          font-size: 0.85rem;
-          color: #6b7280;
-          margin-bottom: 8px;
-        }
-      }
+    .results-sort {
+      display: flex;
+      gap: 8px;
     }
   }
 }
 
-@media (max-width: 1024px) {
-  .container {
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-  .search-bar {
-    margin: 0;
-    width: 100%;
-    max-width: none;
-  }
-}
-
 @media (max-width: 768px) {
-  .search-results {
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  .search-header {
+    .search-title {
+      font-size: 1.5rem;
+    }
+  }
+
+  .results-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
   }
 }
 </style>

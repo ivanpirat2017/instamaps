@@ -1,82 +1,149 @@
 <template>
-  <router-link v-if="post" :to="`/post/${post.id}`" class="post-link">
-    <div class="post" role="article">
-      <PostImage :src="post.image" :alt="post.title" />
-      <PostContent :post="post" />
-      <CommentsSection :post="post" />
+  <div class="post-card">
+    <div class="post-header">
+      <RouterLink :to="{ name: 'profile', params: { username: post.user } }" class="user-info">
+        <img :src="userAvatar" :alt="post.user" class="user-avatar" />
+        <span class="username">{{ post.user }}</span>
+      </RouterLink>
+      <span class="location">
+        <VaIcon name="location_on" />
+        {{ post.location.name }}
+      </span>
     </div>
-  </router-link>
-  <div v-else class="post skeleton" style="height: 400px"></div>
+
+    <PostImage :src="post.imageUrl" :alt="post.description" />
+
+    <div class="post-actions">
+      <button class="action-button" @click="handleLike">
+        <VaIcon name="favorite" :color="isLiked ? 'danger' : ''" />
+        {{ post.likes }}
+      </button>
+      <button class="action-button" @click="handleComment">
+        <VaIcon name="comment" />
+        {{ post.comments?.length || 0 }}
+      </button>
+    </div>
+
+    <p class="description">{{ post.description }}</p>
+
+    <div v-if="showComments" class="comments-section">
+      <CommentsSection :post-id="post.id" :comments="post.comments" />
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { computed, ref } from "vue";
+import { VaIcon } from "vuestic-ui";
+import { useAuthStore } from "../stores/auth";
 import PostImage from "./post/PostImage.vue";
-import PostContent from "./post/PostContent.vue";
 import CommentsSection from "./post/CommentsSection.vue";
-import { type Post } from "../stores/post";
+import type { Post } from "../stores/post";
 
-defineProps<{
-  post?: Post;
+const authStore = useAuthStore();
+
+const props = defineProps<{
+  post: Post;
 }>();
+
+const showComments = ref(false);
+const isLiked = ref(false);
+
+const userAvatar = computed(() => {
+  const user = authStore.getUserByUsername(props.post.user);
+  return user?.avatar || `https://api.dicebear.com/7.x/avatars/svg?seed=${props.post.user}`;
+});
+
+function handleLike() {
+  // Здесь будет логика лайка
+}
+
+function handleComment() {
+  showComments.value = !showComments.value;
+}
 </script>
 
-<style scoped>
-.post {
+<style scoped lang="scss">
+.post-card {
+  background: var(--white-transparent);
   border-radius: 12px;
-  padding: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
   box-shadow: var(--shadow);
-  transition: transform 0.3s;
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
 
   &:hover {
-    transform: translateY(-4px);
-  }
-
-  img {
-    width: 100%;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    object-fit: cover;
-  }
-
-  .post-content {
-    h3 {
-      font-size: 1.2rem;
+    .username {
       color: var(--primary-color);
-      margin-bottom: 4px;
-    }
-
-    p {
-      font-size: 0.9rem;
-      color: #6b7280;
-      margin-bottom: 8px;
-    }
-  }
-
-  .comments {
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid var(--border-color);
-
-    p {
-      font-size: 0.85rem;
-      color: #6b7280;
-      margin-bottom: 6px;
     }
   }
 }
 
-.skeleton {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+.user-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
+.username {
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.location {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  opacity: 0.8;
+}
+
+.post-actions {
+  display: flex;
+  gap: 16px;
+  margin: 12px 0;
+}
+
+.action-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  color: inherit;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--primary-color);
   }
-  100% {
-    background-position: -200% 0;
-  }
+}
+
+.description {
+  margin: 12px 0;
+  line-height: 1.5;
+}
+
+.comments-section {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-color);
 }
 </style>

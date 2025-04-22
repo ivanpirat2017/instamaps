@@ -1,72 +1,134 @@
 <template>
-  <section class="photo-grid">
-    <router-link v-for="post in posts" :key="post.id" :to="`/post/${post.id}`" class="photo-item">
-      <img v-lazy="post.image" :alt="post.title" loading="lazy" decoding="async" />
-      <div class="photo-caption">
-        <span>{{ post.title }}</span>
-      </div>
-    </router-link>
-  </section>
+  <div class="photo-grid">
+    <div v-if="posts.length === 0" class="no-photos">
+      <VaIcon name="image_not_supported" size="large" />
+      <p>{{ $t("app.noPhotosYet") }}</p>
+    </div>
+    <div v-else class="grid">
+      <RouterLink
+        v-for="post in posts"
+        :key="post.id"
+        :to="{ name: 'post', params: { id: post.id } }"
+        class="grid-item"
+      >
+        <div class="image-container">
+          <img
+            :src="post.imageUrl"
+            :alt="post.description"
+            loading="lazy"
+            decoding="async"
+            class="post-image"
+          />
+          <div class="overlay">
+            <div class="stats">
+              <span class="stat">
+                <VaIcon name="favorite" />
+                {{ post.likes }}
+              </span>
+              <span class="stat">
+                <VaIcon name="comment" />
+                {{ post.comments?.length || 0 }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </RouterLink>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { type Post } from "../../stores/post";
+import { VaIcon } from "vuestic-ui";
+import type { Post } from "../../stores/post";
 
 defineProps<{
   posts: Post[];
 }>();
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .photo-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 18px;
-  padding: 8px 0;
-}
-.photo-item {
-  position: relative;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  background: #fff;
-  transition: box-shadow 0.2s;
-}
-.photo-item:hover {
-  box-shadow: 0 6px 24px rgba(79, 70, 229, 0.18);
-  z-index: 2;
-}
-.photo-item img {
   width: 100%;
-  height: 180px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.grid-item {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 8px;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(1.02);
+
+    .overlay {
+      opacity: 1;
+    }
+  }
+}
+
+.image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.post-image {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  display: block;
-  transition: transform 0.25s;
 }
-.photo-item:hover img {
-  transform: scale(1.04);
-}
-.photo-caption {
+
+.overlay {
   position: absolute;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.55) 60%, transparent 100%);
-  color: #fff;
-  font-size: 0.98rem;
-  padding: 8px 12px 6px 12px;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
-  border-bottom-left-radius: 12px;
-  border-bottom-right-radius: 12px;
-  pointer-events: none;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
-@media (max-width: 600px) {
-  .photo-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 10px;
+
+.stats {
+  display: flex;
+  gap: 24px;
+  color: white;
+  font-size: 1.1rem;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.no-photos {
+  text-align: center;
+  padding: 48px;
+  color: var(--primary-color);
+  background: var(--white-transparent);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+
+  .va-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
   }
-  .photo-item img {
-    height: 110px;
+
+  p {
+    font-size: 1.1rem;
+    opacity: 0.8;
   }
 }
 </style>

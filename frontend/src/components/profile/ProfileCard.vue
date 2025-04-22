@@ -1,71 +1,91 @@
 <template>
-  <section class="profile-card">
-    <VaAvatar
-      :src="user?.avatar || 'https://via.placeholder.com/120'"
-      size="large"
-      class="profile-avatar"
-    />
-    <h2>@{{ user?.username || "traveler" }}</h2>
-    <p>{{ user?.bio || $t("app.profileBio") }}</p>
-    <div class="tags">
-      <VaChip v-for="tag in profileTags" :key="tag" color="primary">#{{ tag }}</VaChip>
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="avatar-container">
+        <img :src="user.avatar" :alt="user.username" class="avatar" />
+      </div>
+      <div class="profile-info">
+        <h2 class="username">{{ user.username }}</h2>
+        <p class="bio">{{ user.bio || $t("app.profileBio") }}</p>
+        <p class="join-date">{{ $t("app.joinedOn") }}: {{ formatDate(user.joinDate) }}</p>
+      </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { VaAvatar, VaChip } from "vuestic-ui";
-import { computed, toRefs } from "vue";
-import { usePostStore } from "../../stores/post";
+import type { User } from "../../stores/auth";
 
 const props = defineProps<{
-  user: { username: string; avatar?: string; bio?: string } | null;
+  user: User;
 }>();
-const { user } = toRefs(props);
 
-const postStore = usePostStore();
-const profileTags = computed(() => {
-  if (!postStore.posts || !user.value) return [];
-  const tags = new Set<string>();
-  postStore.posts.forEach((post) => {
-    if (post.user === user.value.username && post.tags) {
-      post.tags.forEach((tag) => tags.add(tag));
-    }
-  });
-  return Array.from(tags);
-});
+function formatDate(dateString?: string) {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat("ru-RU").format(date);
+}
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .profile-card {
-  border-radius: 16px;
-  padding: 32px 24px 24px 24px;
-  box-shadow: var(--shadow);
-  text-align: center;
-  margin-bottom: 24px;
   background: var(--white-transparent);
-  position: relative;
-  overflow: visible;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: var(--shadow);
 }
-.profile-avatar {
-  margin-bottom: 16px;
-  box-shadow: 0 4px 16px rgba(79, 70, 229, 0.12);
-  border: 3px solid var(--accent-color);
+
+.profile-header {
+  display: flex;
+  gap: 24px;
+  align-items: center;
 }
-.profile-card h2 {
-  font-size: 2rem;
+
+.avatar-container {
+  flex-shrink: 0;
+}
+
+.avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--primary-color);
+}
+
+.profile-info {
+  flex-grow: 1;
+}
+
+.username {
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--primary-color);
   margin-bottom: 8px;
 }
-.profile-card p {
-  font-size: 1.05rem;
-  color: #6b7280;
-  margin-bottom: 18px;
+
+.bio {
+  color: var(--primary-color);
+  opacity: 0.8;
+  margin-bottom: 8px;
+  line-height: 1.5;
 }
-.tags {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
-  flex-wrap: wrap;
+
+.join-date {
+  font-size: 0.9rem;
+  color: var(--primary-color);
+  opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .avatar {
+    width: 100px;
+    height: 100px;
+  }
 }
 </style>

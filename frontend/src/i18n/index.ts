@@ -3,7 +3,7 @@ import { createI18n } from "vue-i18n";
 const messages = {
   en: {
     app: {
-      searchPhotos:"Search photos",
+      searchPhotos: "Search photos",
       title: "PhotoStream",
       login: "Login",
       loginTitle: "Login",
@@ -32,6 +32,17 @@ const messages = {
       loginError: "Login failed",
       registerSuccess: "Registered successfully",
       registerError: "Registration failed",
+      followers: "Followers",
+      following: "Following",
+      posts: "Posts",
+      photos: "Photos",
+      follow: "Follow",
+      unfollow: "Unfollow",
+      userNotFound: "User not found",
+      profileBio: "No bio yet",
+      allRightsReserved: "All rights reserved",
+      noPhotosYet: "No photos yet",
+      joinedOn: "Joined on",
     },
     validation: {
       emailRequired: "Email is required",
@@ -42,7 +53,7 @@ const messages = {
   },
   ru: {
     app: {
-      searchPhotos:"Поиск фото",
+      searchPhotos: "Поиск фото",
       title: "PhotoStream",
       login: "Войдите",
       loginTitle: "Вход",
@@ -71,6 +82,17 @@ const messages = {
       loginError: "Ошибка входа",
       registerSuccess: "Успешная регистрация",
       registerError: "Ошибка регистрации",
+      followers: "Подписчики",
+      following: "Подписки",
+      posts: "Публикации",
+      photos: "Фотографии",
+      follow: "Подписаться",
+      unfollow: "Отписаться",
+      userNotFound: "Пользователь не найден",
+      profileBio: "Биография не указана",
+      allRightsReserved: "Все права защищены",
+      noPhotosYet: "Пока нет фотографий",
+      joinedOn: "Дата регистрации",
     },
     validation: {
       emailRequired: "Эл. почта обязательна",

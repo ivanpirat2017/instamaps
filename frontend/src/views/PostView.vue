@@ -1,40 +1,76 @@
 <template>
   <main class="container">
     <Transition name="page" mode="out-in">
-      <section v-if="post" class="post-view">
+      <div v-if="isLoading" class="loading-state">
+        <VaSkeleton />
+      </div>
+
+      <section v-else-if="error" class="error-state">
+        <div class="error-content">
+          <VaIcon name="error" size="large" />
+          <h2>{{ error }}</h2>
+          <p>{{ $t("app.tryAgainLater") }}</p>
+          <div class="actions">
+            <VaButton @click="fetchPost">
+              {{ $t("app.tryAgain") }}
+            </VaButton>
+            <RouterLink to="/search" class="back-link">
+              <VaButton preset="secondary">
+                {{ $t("app.backToSearch") }}
+              </VaButton>
+            </RouterLink>
+          </div>
+        </div>
+      </section>
+
+      <section v-else-if="post" class="post-view">
         <div class="post-content">
           <RouterLink to="/search" class="back-button">
             <VaIcon name="arrow_back" />
-            <span>Назад к поиску</span>
+            <span>{{ $t("app.backToSearch") }}</span>
           </RouterLink>
+
           <PostCard :post="post" />
+
           <div class="post-meta">
             <div class="meta-header">
               <h2>{{ post.title }}</h2>
               <div class="meta-actions">
-                <VaButton preset="plain" icon="share" color="primary" class="action-button" />
                 <VaButton
                   preset="plain"
-                  icon="favorite_border"
+                  icon="share"
                   color="primary"
                   class="action-button"
+                  @click="handleShare"
+                />
+                <VaButton
+                  preset="plain"
+                  :icon="isLiked ? 'favorite' : 'favorite_border'"
+                  :color="isLiked ? 'danger' : 'primary'"
+                  class="action-button"
+                  @click="handleLike"
+                  v-if="authStore.isAuthenticated"
                 />
               </div>
             </div>
-            <div class="meta-tags">
+
+            <div class="meta-tags" v-if="post.tags && post.tags.length">
               <VaChip v-for="tag in post.tags" :key="tag" color="primary" class="tag" size="small">
                 #{{ tag }}
               </VaChip>
             </div>
+
             <p class="location" v-if="post.location">
               <VaIcon name="place" />
-              {{ post.location.lat.toFixed(4) }}, {{ post.location.lng.toFixed(4) }}
+              {{ post.location.name }}
+              ({{ post.location.lat.toFixed(4) }}, {{ post.location.lng.toFixed(4) }})
             </p>
           </div>
         </div>
+
         <div class="map-section">
           <div class="map-header">
-            <h3 class="map-title">Расположение на карте</h3>
+            <h3 class="map-title">{{ $t("app.locationOnMap") }}</h3>
             <VaButton
               preset="plain"
               icon="fullscreen"
@@ -47,13 +83,14 @@
           </div>
         </div>
       </section>
+
       <section v-else class="not-found">
         <div class="not-found-content">
           <VaIcon name="error" size="large" />
-          <h2>Пост не найден</h2>
-          <p>Возможно, он был удален или перемещен</p>
+          <h2>{{ $t("app.postNotFound") }}</h2>
+          <p>{{ $t("app.postNotFoundDesc") }}</p>
           <RouterLink to="/search" class="back-link">
-            <VaButton>Вернуться к поиску</VaButton>
+            <VaButton>{{ $t("app.backToSearch") }}</VaButton>
           </RouterLink>
         </div>
       </section>
@@ -62,24 +99,94 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { ref, computed, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { usePostStore } from "../stores/post";
+import { useAuthStore } from "../stores/auth";
+import { showToast } from "../utils/toast";
 import PostCard from "../components/PostCard.vue";
 import MapContainer from "../components/map/MapContainer.vue";
-import { VaIcon, VaChip, VaButton } from "vuestic-ui";
+import { VaIcon, VaChip, VaButton, VaSkeleton } from "vuestic-ui";
 
 const route = useRoute();
+const router = useRouter();
 const postStore = usePostStore();
-const postId = computed(() => Number(route.params.id));
-const post = computed(() => postStore.posts.find((p) => p.id === postId.value));
+const authStore = useAuthStore();
+
+const isLoading = ref(true);
+const error = ref<string | null>(null);
 const isMapFullscreen = ref(false);
 
-onMounted(async () => {
-  if (!post.value) {
-    await postStore.fetchPosts();
-  }
+const postId = computed(() => route.params.id?.toString());
+const post = computed(() => postStore.posts.find((p) => p.id === postId.value));
+
+const isLiked = computed(() => {
+  if (!authStore.user || !post.value) return false;
+  return postStore.isLiked(post.value.id, authStore.user.id);
 });
+
+async function fetchPost() {
+  if (!postId.value) {
+    router.push("/search");
+    return;
+  }
+
+  isLoading.value = true;
+  error.value = null;
+
+  try {
+    // Имитация задержки загрузки как в реальном API
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    await postStore.fetchPosts();
+
+    if (!post.value) {
+      error.value = "app.postNotFound";
+    }
+  } catch (err) {
+    error.value = "app.errorLoadingPost";
+    console.error("Error fetching post:", err);
+  } finally {
+    isLoading.value = false;
+  }
+}
+
+async function handleLike() {
+  if (!authStore.isAuthenticated) {
+    showToast($t("app.loginRequired"), "info");
+    return;
+  }
+
+  if (post.value && authStore.user) {
+    try {
+      await postStore.toggleLike(post.value.id, authStore.user.id);
+      showToast(isLiked.value ? $t("app.postUnliked") : $t("app.postLiked"), "success");
+    } catch (err) {
+      showToast($t("app.errorOccurred"), "error");
+    }
+  }
+}
+
+async function handleShare() {
+  try {
+    await navigator.share({
+      title: post.value?.title,
+      text: post.value?.description,
+      url: window.location.href,
+    });
+    showToast("app.sharedSuccessfully", "success");
+  } catch (err) {
+    // Если Web Share API не поддерживается или произошла ошибка,
+    // копируем ссылку в буфер обмена
+    await navigator.clipboard.writeText(window.location.href);
+    showToast("app.linkCopied", "success");
+  }
+}
+
+// Перезагружаем пост при изменении ID в URL
+watch(() => route.params.id, fetchPost, { immediate: true });
+
+onMounted(fetchPost);
 </script>
 
 <style scoped lang="scss">
@@ -88,6 +195,50 @@ onMounted(async () => {
   margin: 0 auto;
   padding: 20px;
   width: 100%;
+}
+
+.loading-state {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error-state,
+.not-found {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+
+  .error-content,
+  .not-found-content {
+    text-align: center;
+    color: var(--primary-color);
+
+    .va-icon {
+      font-size: 64px;
+      opacity: 0.5;
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin: 16px 0 8px;
+    }
+
+    p {
+      color: var(--primary-color);
+      opacity: 0.7;
+      margin-bottom: 20px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+  }
 }
 
 .post-view {
@@ -110,6 +261,7 @@ onMounted(async () => {
   border-radius: 8px;
   margin-bottom: 16px;
   transition: all 0.2s;
+  text-decoration: none;
 
   &:hover {
     background: var(--white-transparent);
@@ -197,29 +349,6 @@ onMounted(async () => {
   }
 }
 
-.not-found {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
-
-  .not-found-content {
-    text-align: center;
-    color: var(--primary-color);
-
-    h2 {
-      font-size: 1.5rem;
-      margin: 16px 0 8px;
-    }
-
-    p {
-      color: var(--primary-color);
-      opacity: 0.7;
-      margin-bottom: 20px;
-    }
-  }
-}
-
 .action-button {
   opacity: 0.7;
   transition: all 0.2s;
@@ -240,16 +369,5 @@ onMounted(async () => {
 .page-leave-to {
   opacity: 0;
   transform: translateY(20px);
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
 }
 </style>

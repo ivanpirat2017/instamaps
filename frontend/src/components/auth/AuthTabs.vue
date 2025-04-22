@@ -1,11 +1,11 @@
 <template>
-  <div class="auth-body">
-    <div class="auth-container">
-      <VaTabs grow>
-        <VaTab @click="updateValue('login')">{{ $t("app.login") }}</VaTab>
-        <VaTab @click="updateValue('register')">{{ $t("app.register") }}</VaTab>
-      </VaTabs>
-    </div>
+  <div class="AuthTabs">
+    <span :class="value == 'login' ? 'AuthTabsActive' : 'AuthTabsDisabled'" @click="updateValue('login')">{{
+      $t("app.login")
+    }}</span>
+    <span :class="value == 'register' ? 'AuthTabsActive' : 'AuthTabsDisabled'" @click="updateValue('register')">{{
+      $t("app.register")
+    }}</span>
   </div>
 </template>
 
@@ -27,27 +27,27 @@ const updateValue = (newValue: "login" | "register") => {
 };
 </script>
 
-<style scoped>
-.auth-body {
-  background: var(--background-gradient);
+<style scoped lang="scss">
+.AuthTabs {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 16px;
-  min-height: calc(100vh - 136px);
-}
-
-.auth-container {
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: var(--shadow);
-  max-width: 500px;
-  width: 100%;
-}
-
-@media (max-width: 768px) {
-  .auth-container {
-    padding: 16px;
+  padding: 5px;
+  background-color: var(--white-transparent);
+  border-radius: 8px;
+  gap: 10px;
+  span {
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    transition: color 0.3s ease;
+    user-select: none;
+  }
+  &Active {
+    color: var(--accent-color);
+  }
+  &Disabled {
+    color: var(--primary-color);
   }
 }
 </style>

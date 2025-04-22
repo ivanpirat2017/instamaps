@@ -13,11 +13,22 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
+import { useAuthStore } from "./stores/auth";
+import { usePostStore } from "./stores/post";
 import AppHeader from "./components/AppHeader.vue";
 import AppFooter from "./components/AppFooter.vue";
 import { useThemeStore } from "./stores/theme";
+
 const themeStore = useThemeStore();
+const authStore = useAuthStore();
+const postStore = usePostStore();
+
 themeStore.toggleTheme();
+
+onMounted(async () => {
+  await Promise.all([authStore.fetchUsers(), postStore.fetchPosts()]);
+});
 </script>
 
 <style>

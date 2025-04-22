@@ -1,9 +1,13 @@
-import { VaToast } from "vuestic-ui";
+import { useToast } from "vuestic-ui";
 
-export function showToast(message: string, type: "success" | "error" | "info" = "info") {
-  VaToast.init({
+type ToastType = "success" | "error" | "info" | "warning";
+
+export function showToast(message: string, type: ToastType = "info") {
+  const { init } = useToast();
+  init({
     message,
-    color: type === "success" ? "success" : type === "error" ? "danger" : "info",
+    color: type,
     duration: 3000,
+    position: "top-right",
   });
 }

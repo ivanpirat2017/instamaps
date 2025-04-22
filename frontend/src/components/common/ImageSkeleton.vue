@@ -1,8 +1,6 @@
 <template>
-  <div class="image-skeleton" :style="{ aspectRatio }">
-    <div class="skeleton-animation">
-      <VaIcon name="image" />
-    </div>
+  <div class="image-skeleton">
+    <div class="shimmer"></div>
   </div>
 </template>
 
@@ -17,31 +15,35 @@ defineProps<{
 <style scoped lang="scss">
 .image-skeleton {
   width: 100%;
-  background: var(--white-transparent);
-  border-radius: 8px;
+  height: 100%;
+  background: var(--va-background-secondary);
+  position: relative;
   overflow: hidden;
-  aspect-ratio: 16/9;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: inherit;
 }
 
-.skeleton-animation {
-  animation: pulse 1.5s infinite;
-  color: var(--primary-color);
-  opacity: 0.2;
-  font-size: 48px;
+.shimmer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(var(--va-primary-rgb), 0.02) 25%,
+    rgba(var(--va-primary-rgb), 0.1) 37%,
+    rgba(var(--va-primary-rgb), 0.02) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
 }
 
-@keyframes pulse {
+@keyframes shimmer {
   0% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 0.4;
+    background-position: 100% 50%;
   }
   100% {
-    opacity: 0.2;
+    background-position: 0 50%;
   }
 }
 </style>

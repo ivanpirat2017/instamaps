@@ -1,0 +1,37 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "traveler",
+      "email": "traveler@example.com",
+      "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e",
+      "bio": "Путешественник и фотограф. Исследую мир через объектив камеры.",
+      "joinDate": "2024-01-15",
+      "followers": 1234,
+      "following": 567,
+      "location": "Москва, Россия"
+    },
+    {
+      "id": "2",
+      "username": "mountain_lover",
+      "email": "mountain@example.com",
+      "avatar": "https://images.unsplash.com/photo-1519345182560-3f2917c472ef",
+      "bio": "Горный фотограф. Покоряю вершины и делюсь красотой гор.",
+      "joinDate": "2024-02-20",
+      "followers": 892,
+      "following": 345,
+      "location": "Сочи, Россия"
+    },
+    {
+      "id": "3",
+      "username": "sea_lover",
+      "email": "sea@example.com",
+      "avatar": "https://images.unsplash.com/photo-1517841905240-472988babdf9",
+      "bio": "Морской фотограф. Ловлю моменты на берегу океана.",
+      "joinDate": "2024-03-10",
+      "followers": 756,
+      "following": 234,
+      "location": "Владивосток, Россия"
+    }
+  ]
+}

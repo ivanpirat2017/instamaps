@@ -132,7 +132,7 @@
             />
           </div>
           <div :class="['map-container', { fullscreen: isMapFullscreen }]">
-            <MapContainer :selected-post="post" />
+            <MapContainer :selected-post="post" :staticMode="true" />
           </div>
         </div>
       </section>

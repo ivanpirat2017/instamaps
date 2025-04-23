@@ -1,0 +1,27 @@
+{
+  "id": "2",
+  "userId": "2",
+  "user": "mountain_lover",
+  "title": "Туманное утро",
+  "imageUrl": "https://images.unsplash.com/photo-1454496522488-7a8e488e8606",
+  "description": "Туманное утро в горах ⛰️",
+  "location": {
+    "lat": 45.932,
+    "lng": 7.628,
+    "name": "Маттерхорн"
+  },
+  "likes": 567,
+  "tags": ["горы", "туман", "утро", "альпы"],
+  "comments": [],
+  "createdAt": "2024-04-20T08:15:00Z",
+  "views": 789,
+  "metadata": {
+    "camera": "Canon 5D Mark IV",
+    "lens": "16-35mm f/2.8L",
+    "settings": {
+      "iso": "200",
+      "aperture": "f/11",
+      "shutterSpeed": "1/125"
+    }
+  }
+}

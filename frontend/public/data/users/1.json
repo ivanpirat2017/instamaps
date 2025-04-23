@@ -1,0 +1,32 @@
+{
+  "id": "1",
+  "username": "traveler",
+  "email": "traveler@example.com",
+  "avatar": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e",
+  "bio": "Путешественник и фотограф. Исследую мир через объектив камеры.",
+  "joinDate": "2024-01-15",
+  "followers": 1234,
+  "following": 567,
+  "location": "Москва, Россия",
+  "posts": ["1"],
+  "social": {
+    "instagram": "@traveler_photo",
+    "twitter": "@traveler_photo",
+    "website": "https://traveler-photo.com"
+  },
+  "equipment": {
+    "cameras": ["Sony A7III", "Canon 5D Mark IV"],
+    "lenses": ["24-70mm f/2.8", "70-200mm f/2.8"]
+  },
+  "stats": {
+    "totalLikes": 2345,
+    "totalComments": 567,
+    "totalViews": 12345
+  },
+  "preferences": {
+    "emailNotifications": true,
+    "pushNotifications": true,
+    "language": "ru",
+    "theme": "auto"
+  }
+}

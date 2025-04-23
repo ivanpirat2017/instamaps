@@ -2,13 +2,15 @@
   <main class="container">
     <Transition name="page" mode="out-in">
       <div v-if="isLoading" class="loading-state">
-        <VaSkeleton />
+        <VaSkeleton type="image" aspectRatio="16/9" class="mb-4" />
+        <VaSkeleton type="text" :lines="3" class="mb-4" />
+        <VaSkeleton type="text" :lines="2" />
       </div>
 
       <section v-else-if="error" class="error-state">
         <div class="error-content">
           <VaIcon name="error" size="large" />
-          <h2>{{ error }}</h2>
+          <h2>{{ $t(error) }}</h2>
           <p>{{ $t("app.tryAgainLater") }}</p>
           <div class="actions">
             <VaButton @click="fetchPost">
@@ -54,10 +56,61 @@
               </div>
             </div>
 
-            <div class="meta-tags" v-if="post.tags && post.tags.length">
-              <VaChip v-for="tag in post.tags" :key="tag" color="primary" class="tag" size="small">
-                #{{ tag }}
-              </VaChip>
+            <div class="meta-info">
+              <div class="stats">
+                <span class="stat">
+                  <VaIcon name="favorite" />
+                  {{ post.likes }}
+                </span>
+                <span class="stat">
+                  <VaIcon name="comment" />
+                  {{ post.comments.length }}
+                </span>
+                <span class="stat" v-if="post.views">
+                  <VaIcon name="visibility" />
+                  {{ post.views }}
+                </span>
+              </div>
+
+              <div class="meta-tags" v-if="post.tags && post.tags.length">
+                <VaChip
+                  v-for="tag in post.tags"
+                  :key="tag"
+                  color="primary"
+                  class="tag"
+                  size="small"
+                >
+                  #{{ tag }}
+                </VaChip>
+              </div>
+            </div>
+
+            <div class="photo-info" v-if="post.metadata">
+              <h3>{{ $t("app.photoInfo") }}</h3>
+              <div class="info-grid">
+                <div v-if="post.metadata.camera" class="info-item">
+                  <VaIcon name="camera" />
+                  <span>{{ post.metadata.camera }}</span>
+                </div>
+                <div v-if="post.metadata.lens" class="info-item">
+                  <VaIcon name="camera_enhance" />
+                  <span>{{ post.metadata.lens }}</span>
+                </div>
+                <div v-if="post.metadata.settings" class="settings-grid">
+                  <div v-if="post.metadata.settings.iso" class="setting">
+                    <span class="label">ISO</span>
+                    <span class="value">{{ post.metadata.settings.iso }}</span>
+                  </div>
+                  <div v-if="post.metadata.settings.aperture" class="setting">
+                    <span class="label">f/</span>
+                    <span class="value">{{ post.metadata.settings.aperture }}</span>
+                  </div>
+                  <div v-if="post.metadata.settings.shutterSpeed" class="setting">
+                    <span class="label">{{ $t("app.shutterSpeed") }}</span>
+                    <span class="value">{{ post.metadata.settings.shutterSpeed }}</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <p class="location" v-if="post.location">
@@ -118,8 +171,7 @@ const error = ref<string | null>(null);
 const isMapFullscreen = ref(false);
 
 const postId = computed(() => route.params.id?.toString());
-const post = computed(() => postStore.posts.find((p) => p.id === postId.value));
-
+const post = computed(() => postStore.currentPost);
 const isLiked = computed(() => {
   if (!authStore.user || !post.value) return false;
   return postStore.isLiked(post.value.id, authStore.user.id);
@@ -135,14 +187,7 @@ async function fetchPost() {
   error.value = null;
 
   try {
-    // Имитация задержки загрузки как в реальном API
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    await postStore.fetchPosts();
-
-    if (!post.value) {
-      error.value = "app.postNotFound";
-    }
+    await postStore.fetchPostById(postId.value);
   } catch (err) {
     error.value = "app.errorLoadingPost";
     console.error("Error fetching post:", err);
@@ -174,12 +219,12 @@ async function handleShare() {
       text: post.value?.description,
       url: window.location.href,
     });
-    showToast("app.sharedSuccessfully", "success");
+    showToast($t("app.sharedSuccessfully"), "success");
   } catch (err) {
     // Если Web Share API не поддерживается или произошла ошибка,
     // копируем ссылку в буфер обмена
     await navigator.clipboard.writeText(window.location.href);
-    showToast("app.linkCopied", "success");
+    showToast($t("app.linkCopied"), "success");
   }
 }
 
@@ -198,10 +243,9 @@ onMounted(fetchPost);
 }
 
 .loading-state {
-  min-height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
 }
 
 .error-state,
@@ -299,11 +343,79 @@ onMounted(fetchPost);
     }
   }
 
+  .meta-info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .stats {
+    display: flex;
+    gap: 24px;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--primary-color);
+    opacity: 0.8;
+  }
+
   .meta-tags {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
+  }
+}
+
+.photo-info {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--va-border);
+
+  h3 {
+    font-size: 1.1rem;
+    color: var(--primary-color);
     margin-bottom: 12px;
+  }
+
+  .info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary-color);
+    opacity: 0.8;
+  }
+
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .setting {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    .label {
+      font-size: 0.85rem;
+      color: var(--primary-color);
+      opacity: 0.6;
+    }
+
+    .value {
+      font-weight: 500;
+      color: var(--primary-color);
+    }
   }
 }
 

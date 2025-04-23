@@ -1,66 +1,57 @@
 <template>
-  <header class="header" role="banner">
-    <div class="container">
+  <header class="header" :class="{ dark: themeStore.isDarkMode }">
+    <div class="header-content">
       <Logo />
-      <nav class="nav" aria-label="Main navigation">
-        <NavMenu :is-open="isMenuOpen" @close="closeMenu" :is-mobile="isMobile" />
+      <NavMenu class="desktop-nav" />
+      <div class="header-actions">
         <ThemeToggle />
-      </nav>
+      </div>
     </div>
   </header>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
 import Logo from "./header/Logo.vue";
 import NavMenu from "./header/NavMenu.vue";
 import ThemeToggle from "./header/ThemeToggle.vue";
+import { useThemeStore } from "../stores/theme";
 
-const isMenuOpen = ref(false);
-const isMobile = computed(() => window.innerWidth <= 768);
-
-function closeMenu() {
-  isMenuOpen.value = false;
-}
+const themeStore = useThemeStore();
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .header {
-  background: var(--white-transparent);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-color);
+  background: var(--va-background-primary);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
-  z-index: 1000;
-  padding: 12px 0;
+  z-index: 50;
 
-  .container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  &.dark {
+    background: var(--va-dark);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
   }
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--primary-color);
-  transition: color 0.3s;
-
-  &:hover {
-    color: var(--accent-color);
-  }
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-}
-
-.container {
+.header-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  width: 100%;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.desktop-nav {
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 </style>

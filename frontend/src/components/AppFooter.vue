@@ -1,6 +1,6 @@
 <template>
-  <footer class="footer" role="contentinfo">
-    <div class="container">
+  <footer class="footer" :class="{ mobile: isMobileDevice }">
+    <div class="footer-content">
       <Copyright />
       <SocialLinks />
     </div>
@@ -8,30 +8,46 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted } from "vue";
 import Copyright from "./footer/Copyright.vue";
 import SocialLinks from "./footer/SocialLinks.vue";
+
+const isMobileDevice = ref(false);
+
+onMounted(() => {
+  const checkMobile = () => {
+    isMobileDevice.value = window.innerWidth <= 768;
+  };
+
+  checkMobile();
+  window.addEventListener("resize", checkMobile);
+});
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .footer {
-  background: var(--white-transparent);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid var(--border-color);
-  padding: 16px 0;
+  background: var(--va-background-primary);
+  border-top: 1px solid var(--va-border);
+  padding: 24px 0;
+  margin-top: auto;
 
-  .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
+  &.mobile {
+    margin-bottom: 60px; // Высота мобильной навигации
   }
 }
 
-.container {
+.footer-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
-  width: 100%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    text-align: center;
+  }
 }
 </style>

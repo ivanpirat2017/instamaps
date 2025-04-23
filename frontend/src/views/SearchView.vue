@@ -1,15 +1,15 @@
 <template>
   <main class="container">
     <section class="search-section">
-      <SearchBar v-model="searchQuery" />
+      <SearchBar v-model="searchQuery" @search="handleSearch" @update:sort="handleSort" />
       <FilterTags v-model="selectedTags" :tags="availableTags" />
     </section>
-    <SearchResults :query="searchQuery" :selected-tags="selectedTags" />
+    <SearchResults :posts="postStore.posts" :query="searchQuery" :selected-tags="selectedTags" />
   </main>
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { usePostStore } from "../stores/post";
 import SearchBar from "../components/search/SearchBar.vue";
 import FilterTags from "../components/search/FilterTags.vue";
@@ -18,6 +18,14 @@ import SearchResults from "../components/search/SearchResults.vue";
 const postStore = usePostStore();
 const searchQuery = ref("");
 const selectedTags = ref<string[]>([]);
+const sortBy = ref<"date" | "popular">("date");
+
+// Загружаем посты при монтировании компонента
+onMounted(async () => {
+  if (!postStore.posts.length) {
+    await postStore.fetchPosts();
+  }
+});
 
 // Получаем уникальные теги из всех постов
 const availableTags = computed(() => {
@@ -27,6 +35,14 @@ const availableTags = computed(() => {
   });
   return Array.from(tagsSet);
 });
+
+const handleSearch = () => {
+  // Дополнительная логика поиска, если нужна
+};
+
+const handleSort = (value: "date" | "popular") => {
+  sortBy.value = value;
+};
 </script>
 
 <style scoped lang="scss">
@@ -39,5 +55,12 @@ const availableTags = computed(() => {
 
 .search-section {
   margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    gap: 12px;
+  }
 }
 </style>

@@ -2,47 +2,48 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import axios from "axios";
 
-export interface Comment {
-  id: string;
-  userId: string;
-  user: string;
-  text: string;
-  createdAt: string;
-}
-
 export interface Post {
   id: string;
   userId: string;
   user: string;
   title: string;
-  imageUrl: string;
-  description: string;
-  location: {
+  image: string;
+  description?: string;
+  location?: {
     lat: number;
     lng: number;
     name: string;
   };
   likes: number;
   tags?: string[];
-  comments: Comment[];
+  comments: Array<{
+    id: string;
+    userId: string;
+    user: string;
+    text: string;
+    createdAt: string;
+  }>;
   createdAt: string;
+  views: number;
+  metadata?: {
+    camera?: string;
+    lens?: string;
+    settings?: {
+      iso?: string;
+      aperture?: string;
+      shutterSpeed?: string;
+    };
+  };
 }
 
 export const usePostStore = defineStore("post", () => {
   const posts = ref<Post[]>([]);
+  const currentPost = ref<Post | null>(null);
   const isLoading = ref(false);
   const error = ref<string | null>(null);
-  const userLikes = ref<Set<string>>(new Set());
 
-  // Имитация случайных задержек как в реальном API
   function simulateDelay() {
-    const delay = Math.random() * 1000 + 500; // 500-1500ms
-    return new Promise((resolve) => setTimeout(resolve, delay));
-  }
-
-  // Имитация случайных ошибок
-  function simulateError() {
-    return Math.random() < 0.1; // 10% шанс ошибки
+    return new Promise((resolve) => setTimeout(resolve, Math.random() * 500));
   }
 
   async function fetchPosts() {
@@ -52,112 +53,115 @@ export const usePostStore = defineStore("post", () => {
     try {
       await simulateDelay();
 
-      if (simulateError()) {
-        throw new Error("Network error");
-      }
-
+      // Загружаем список всех постов
       const response = await axios.get("/data/posts.json");
-      posts.value = response.data.posts;
+      const postsData = response.data.posts.items || [];
+
+      // Создаем массив промисов для загрузки детальной информации
+      const detailPromises = postsData.map(async (basicPost: any) => {
+        try {
+          const detailResponse = await axios.get(`/data/posts/${basicPost.id}.json`);
+          return {
+            ...basicPost,
+            ...detailResponse.data,
+            likes: 0,
+            comments: [],
+            views: 0,
+            image: basicPost.image, // Используем image из базовых данных
+          };
+        } catch (err) {
+          console.warn(
+            `Детальная информация для поста ${basicPost.id} не найдена, используем базовые данные`
+          );
+          return {
+            ...basicPost,
+            likes: 0,
+            comments: [],
+            views: 0,
+          };
+        }
+      });
+
+      // Ждем загрузки всех деталей
+      posts.value = await Promise.all(detailPromises);
     } catch (err) {
       error.value = "Ошибка при загрузке постов";
       console.error("Error fetching posts:", err);
+      posts.value = []; // Инициализируем пустым массивом в случае ошибки
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  async function fetchPostById(id: string) {
+    isLoading.value = true;
+    error.value = null;
+    currentPost.value = null;
+
+    try {
+      await simulateDelay();
+
+      try {
+        // Сначала пытаемся загрузить детальный файл поста
+        const response = await axios.get(`/data/posts/${id}.json`);
+        currentPost.value = response.data;
+      } catch {
+        // Если детальный файл не найден, ищем в общем списке
+        const post = posts.value.find((p) => p.id === id);
+        if (!post) {
+          error.value = "app.postNotFound";
+          throw new Error("Post not found");
+        }
+        currentPost.value = post;
+      }
+
+      // Увеличиваем счетчик просмотров
+      if (currentPost.value) {
+        currentPost.value.views = (currentPost.value.views || 0) + 1;
+      }
+
+      return currentPost.value;
+    } catch (err) {
+      if (!error.value) {
+        error.value = "app.errorLoadingPost";
+      }
+      console.error("Error fetching post:", err);
       throw err;
     } finally {
       isLoading.value = false;
     }
   }
 
-  async function addPost(post: Omit<Post, "id" | "createdAt" | "comments" | "likes">) {
-    try {
-      await simulateDelay();
-
-      if (simulateError()) {
-        throw new Error("Network error");
-      }
-
-      const newPost: Post = {
-        ...post,
-        id: String(Date.now()),
-        createdAt: new Date().toISOString(),
-        comments: [],
-        likes: 0,
-      };
-
-      posts.value.unshift(newPost);
-      return newPost;
-    } catch (err) {
-      console.error("Error adding post:", err);
-      throw err;
-    }
-  }
-
-  async function addComment(postId: string, comment: Omit<Comment, "id" | "createdAt">) {
-    try {
-      await simulateDelay();
-
-      if (simulateError()) {
-        throw new Error("Network error");
-      }
-
-      const post = posts.value.find((p) => p.id === postId);
-      if (post) {
-        const newComment: Comment = {
-          ...comment,
-          id: `c${Date.now()}`,
-          createdAt: new Date().toISOString(),
-        };
-        post.comments.push(newComment);
-        return newComment;
-      }
-      throw new Error("Post not found");
-    } catch (err) {
-      console.error("Error adding comment:", err);
-      throw err;
-    }
-  }
-
   async function toggleLike(postId: string, userId: string) {
-    try {
-      await simulateDelay();
+    const post = getPostById(postId);
+    if (!post) return;
 
-      if (simulateError()) {
-        throw new Error("Network error");
-      }
+    // В реальном приложении здесь был бы запрос к API
+    await simulateDelay();
 
-      const post = posts.value.find((p) => p.id === postId);
-      if (post) {
-        const likeId = `${postId}-${userId}`;
-        if (userLikes.value.has(likeId)) {
-          userLikes.value.delete(likeId);
-          post.likes -= 1;
-        } else {
-          userLikes.value.add(likeId);
-          post.likes += 1;
-        }
-        return post.likes;
-      }
-      throw new Error("Post not found");
-    } catch (err) {
-      console.error("Error toggling like:", err);
-      throw err;
+    if (isLiked(postId, userId)) {
+      post.likes--;
+    } else {
+      post.likes++;
     }
   }
 
   function isLiked(postId: string, userId: string) {
-    return userLikes.value.has(`${postId}-${userId}`);
+    const post = getPostById(postId);
+    return post ? post.likes > 0 : false;
   }
 
   function getPostById(id: string) {
-    return posts.value.find((p) => p.id === id);
+    return currentPost.value?.id === id ? currentPost.value : posts.value.find((p) => p.id === id);
   }
 
   return {
     posts,
+    currentPost,
     isLoading,
     error,
     fetchPosts,
-    addPost,
-    addComment,
+    fetchPostById,
     toggleLike,
     isLiked,
     getPostById,

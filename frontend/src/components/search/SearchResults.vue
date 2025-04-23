@@ -1,34 +1,83 @@
 <template>
-  <TransitionGroup name="results-grid" tag="div" class="search-results">
-    <ResultItem v-for="post in posts" :key="post.id" :post="post" class="result-item-wrapper" />
-    <div v-if="!posts.length" class="no-results" key="no-results">
+  <div class="search-results-container">
+    <TransitionGroup
+      name="results-grid"
+      tag="div"
+      class="search-results"
+      v-if="posts && posts.length > 0"
+    >
+      <ResultItem
+        v-for="post in filteredPosts"
+        :key="post.id"
+        :post="post"
+        class="result-item-wrapper"
+      />
+    </TransitionGroup>
+
+    <div v-else class="no-results">
       <VaIcon name="search_off" size="large" />
-      <p>Ничего не найдено</p>
+      <p>{{ $t("app.noResults") }}</p>
     </div>
-  </TransitionGroup>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
 import ResultItem from "./ResultItem.vue";
 import { VaIcon } from "vuestic-ui";
 import { type Post } from "../../stores/post";
 
-defineProps<{
+const props = defineProps<{
+  query?: string;
+  selectedTags?: string[];
   posts: Post[];
 }>();
+
+const filteredPosts = computed(() => {
+  if (!props.posts) return [];
+
+  let filtered = [...props.posts];
+
+  if (props.query) {
+    const searchQuery = props.query.toLowerCase();
+    filtered = filtered.filter(
+      (post) =>
+        post.title.toLowerCase().includes(searchQuery) ||
+        post.description?.toLowerCase().includes(searchQuery) ||
+        post.tags?.some((tag) => tag.toLowerCase().includes(searchQuery))
+    );
+  }
+
+  if (props.selectedTags && props.selectedTags.length > 0) {
+    filtered = filtered.filter((post) =>
+      post.tags?.some((tag) => props.selectedTags?.includes(tag))
+    );
+  }
+
+  return filtered;
+});
 </script>
 
 <style scoped lang="scss">
+.search-results-container {
+  min-height: 400px;
+  position: relative;
+}
+
 .search-results {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
   position: relative;
-  min-height: 200px;
 }
 
 .result-item-wrapper {
-  min-height: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
 }
 
 .no-results {
@@ -37,16 +86,20 @@ defineProps<{
   top: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  color: var(--primary-color);
-  opacity: 0.7;
+  color: var(--va-text-secondary);
+
+  .va-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.7;
+  }
 
   p {
-    margin-top: 12px;
     font-size: 1.1rem;
   }
 }
 
-/* Анимации для сетки результатов */
+/* Анимации */
 .results-grid-move,
 .results-grid-enter-active,
 .results-grid-leave-active {
@@ -56,7 +109,7 @@ defineProps<{
 .results-grid-enter-from,
 .results-grid-leave-to {
   opacity: 0;
-  transform: scale(0.8);
+  transform: scale(0.9);
 }
 
 .results-grid-leave-active {

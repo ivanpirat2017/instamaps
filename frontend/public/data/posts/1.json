@@ -1,0 +1,35 @@
+{
+  "id": "1",
+  "userId": "1",
+  "user": "mountain_explorer",
+  "title": "Горный пейзаж",
+  "image": "https://images.unsplash.com/photo-1506905925346-21bda4d32df4",
+  "description": "Величественные горы на рассвете. Этот снимок был сделан во время восхождения на пик.",
+  "location": {
+    "lat": 46.8182,
+    "lng": 8.2275,
+    "name": "Альпы, Швейцария"
+  },
+  "likes": 245,
+  "tags": ["горы", "природа", "рассвет", "приключения"],
+  "comments": [
+    {
+      "id": "c1",
+      "userId": "2",
+      "user": "nature_lover",
+      "text": "Потрясающий вид! Где именно это место?",
+      "createdAt": "2024-04-21T09:30:00Z"
+    }
+  ],
+  "createdAt": "2024-04-21T08:00:00Z",
+  "views": 1205,
+  "metadata": {
+    "camera": "Sony A7III",
+    "lens": "16-35mm f/2.8",
+    "settings": {
+      "iso": "100",
+      "aperture": "f/8",
+      "shutterSpeed": "1/250"
+    }
+  }
+}

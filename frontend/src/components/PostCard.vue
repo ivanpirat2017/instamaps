@@ -18,7 +18,7 @@
       </div>
     </div>
 
-    <PostImage :src="post.imageUrl" :alt="post.title || ''" />
+    <PostImage :src="post.image" :alt="post.title || ''" />
 
     <div class="post-content">
       <h3>{{ post.title }}</h3>
@@ -31,20 +31,26 @@
       </div>
 
       <div class="post-actions">
-        <button class="action-button" @click="handleLike" v-if="authStore.isAuthenticated">
+        <button 
+          class="action-button like-button"
+          @click="handleLike"
+          :class="{ 'liked': isLiked }"
+          v-if="authStore.isAuthenticated"
+        >
           <VaIcon
             :name="isLiked ? 'favorite' : 'favorite_border'"
             :color="isLiked ? 'danger' : ''"
+            class="like-icon"
           />
-          {{ post.likes }}
+          <span class="like-count">{{ post.likesCount }}</span>
         </button>
         <button class="action-button" @click="handleComment">
           <VaIcon name="comment" />
-          {{ post.comments?.length || 0 }}
+          <span>{{ post.comments?.length || 0 }}</span>
         </button>
         <RouterLink :to="{ name: 'post', params: { id: post.id } }" class="action-button">
           <VaIcon name="open_in_new" />
-          {{ $t("app.open") }}
+          <span>{{ $t("app.open") }}</span>
         </RouterLink>
       </div>
     </div>
@@ -56,10 +62,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { VaIcon, VaChip } from "vuestic-ui";
 import { useAuthStore } from "../stores/auth";
 import { usePostStore } from "../stores/post";
+import { showToast } from "../utils/toast";
 import PostImage from "./post/PostImage.vue";
 import CommentsSection from "./post/CommentsSection.vue";
 import type { Post } from "../stores/post";
@@ -72,17 +79,33 @@ const props = defineProps<{
 }>();
 
 const showComments = ref(false);
-const isLiked = ref(false);
+const isAnimating = ref(false);
+
+const isLiked = computed(() => {
+  if (!authStore.user) return false;
+  return postStore.isLiked(props.post.id, authStore.user.id);
+});
 
 const userAvatar = computed(() => {
   const user = authStore.getUserByUsername(props.post.user);
   return user?.avatar || `https://api.dicebear.com/7.x/avatars/svg?seed=${props.post.user}`;
 });
 
-function handleLike() {
-  if (authStore.isAuthenticated && authStore.user) {
-    postStore.toggleLike(props.post.id, authStore.user.id);
-    isLiked.value = !isLiked.value;
+async function handleLike() {
+  if (!authStore.isAuthenticated || !authStore.user) {
+    showToast("Войдите, чтобы поставить лайк", "info");
+    return;
+  }
+
+  if (isAnimating.value) return;
+
+  isAnimating.value = true;
+  try {
+    await postStore.toggleLike(props.post.id, authStore.user.id);
+  } catch (error) {
+    showToast("Не удалось обновить лайк", "error");
+  } finally {
+    isAnimating.value = false;
   }
 }
 
@@ -196,21 +219,60 @@ function formatDate(dateString: string) {
 }
 
 .action-button {
-  background: none;
-  border: none;
-  padding: 4px;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: var(--va-text-primary);
   cursor: pointer;
-  color: inherit;
-  transition: all 0.2s;
-  text-decoration: none;
+  transition: all 0.2s ease;
 
   &:hover {
-    color: var(--primary-color);
+    background: var(--va-background-secondary);
     transform: translateY(-2px);
   }
+
+  .va-icon {
+    font-size: 20px;
+  }
+}
+
+.like-button {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+  &.liked {
+    transform: scale(1.1);
+  }
+
+  .like-icon {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+
+  &:hover .like-icon {
+    transform: scale(1.2);
+  }
+
+  &.liked .like-icon {
+    animation: likeAnimation 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+}
+
+@keyframes likeAnimation {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
+  }
+}
+
+.like-count {
+  min-width: 20px;
+  text-align: center;
 }
 
 .comments-section {

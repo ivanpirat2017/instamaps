@@ -18,7 +18,7 @@
             <div class="stats">
               <span class="stat">
                 <VaIcon name="favorite" />
-                {{ post.likes }}
+                {{ post.likesCount }}
               </span>
               <span class="stat">
                 <VaIcon name="comment" />

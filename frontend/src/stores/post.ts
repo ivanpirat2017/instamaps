@@ -14,7 +14,8 @@ export interface Post {
     lng: number;
     name: string;
   };
-  likes: number;
+  likesCount: number;
+  userLikes: { [key: string]: boolean }; // Объект для хранения лайков пользователей
   tags?: string[];
   comments: Array<{
     id: string;
@@ -52,42 +53,37 @@ export const usePostStore = defineStore("post", () => {
 
     try {
       await simulateDelay();
-
-      // Загружаем список всех постов
       const response = await axios.get("/data/posts.json");
       const postsData = response.data.posts.items || [];
 
-      // Создаем массив промисов для загрузки детальной информации
       const detailPromises = postsData.map(async (basicPost: any) => {
         try {
           const detailResponse = await axios.get(`/data/posts/${basicPost.id}.json`);
           return {
             ...basicPost,
             ...detailResponse.data,
-            likes: 0,
-            comments: [],
-            views: 0,
-            image: basicPost.image, // Используем image из базовых данных
+            likesCount: detailResponse.data.likes || 0,
+            userLikes: {}, // Инициализируем пустым объектом
+            comments: detailResponse.data.comments || [],
+            views: detailResponse.data.views || 0,
+            image: basicPost.image,
           };
         } catch (err) {
-          console.warn(
-            `Детальная информация для поста ${basicPost.id} не найдена, используем базовые данные`
-          );
           return {
             ...basicPost,
-            likes: 0,
+            likesCount: 0,
+            userLikes: {},
             comments: [],
             views: 0,
           };
         }
       });
 
-      // Ждем загрузки всех деталей
       posts.value = await Promise.all(detailPromises);
     } catch (err) {
       error.value = "Ошибка при загрузке постов";
       console.error("Error fetching posts:", err);
-      posts.value = []; // Инициализируем пустым массивом в случае ошибки
+      posts.value = [];
     } finally {
       isLoading.value = false;
     }
@@ -102,11 +98,14 @@ export const usePostStore = defineStore("post", () => {
       await simulateDelay();
 
       try {
-        // Сначала пытаемся загрузить детальный файл поста
         const response = await axios.get(`/data/posts/${id}.json`);
-        currentPost.value = response.data;
+        currentPost.value = {
+          ...response.data,
+          likesCount: response.data.likes || 0,
+          userLikes: {}, // Инициализируем пустым объектом
+          comments: response.data.comments || [],
+        };
       } catch {
-        // Если детальный файл не найден, ищем в общем списке
         const post = posts.value.find((p) => p.id === id);
         if (!post) {
           error.value = "app.postNotFound";
@@ -115,7 +114,6 @@ export const usePostStore = defineStore("post", () => {
         currentPost.value = post;
       }
 
-      // Увеличиваем счетчик просмотров
       if (currentPost.value) {
         currentPost.value.views = (currentPost.value.views || 0) + 1;
       }
@@ -136,19 +134,24 @@ export const usePostStore = defineStore("post", () => {
     const post = getPostById(postId);
     if (!post) return;
 
-    // В реальном приложении здесь был бы запрос к API
     await simulateDelay();
 
-    if (isLiked(postId, userId)) {
-      post.likes--;
+    const currentLikeState = post.userLikes[userId] || false;
+    
+    if (currentLikeState) {
+      // Убираем лайк
+      post.likesCount = Math.max(0, post.likesCount - 1);
+      post.userLikes[userId] = false;
     } else {
-      post.likes++;
+      // Добавляем лайк
+      post.likesCount++;
+      post.userLikes[userId] = true;
     }
   }
 
   function isLiked(postId: string, userId: string) {
     const post = getPostById(postId);
-    return post ? post.likes > 0 : false;
+    return post ? post.userLikes[userId] || false : false;
   }
 
   function getPostById(id: string) {

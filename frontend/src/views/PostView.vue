@@ -10,15 +10,15 @@
       <section v-else-if="error" class="error-state">
         <div class="error-content">
           <VaIcon name="error" size="large" />
-          <h2>{{ $t(error) }}</h2>
-          <p>{{ $t("app.tryAgainLater") }}</p>
+          <h2>{{ t(error) }}</h2>
+          <p>{{ t("app.tryAgainLater") }}</p>
           <div class="actions">
             <VaButton @click="fetchPost">
-              {{ $t("app.tryAgain") }}
+              {{ t("app.tryAgain") }}
             </VaButton>
             <RouterLink to="/search" class="back-link">
               <VaButton preset="secondary">
-                {{ $t("app.backToSearch") }}
+                {{ t("app.backToSearch") }}
               </VaButton>
             </RouterLink>
           </div>
@@ -29,7 +29,7 @@
         <div class="post-content">
           <RouterLink to="/search" class="back-button">
             <VaIcon name="arrow_back" />
-            <span>{{ $t("app.backToSearch") }}</span>
+            <span>{{ t("app.backToSearch") }}</span>
           </RouterLink>
 
           <PostCard :post="post" />
@@ -49,7 +49,8 @@
                   preset="plain"
                   :icon="isLiked ? 'favorite' : 'favorite_border'"
                   :color="isLiked ? 'danger' : 'primary'"
-                  class="action-button"
+                  class="action-button like-button"
+                  :class="{ liked: isLiked }"
                   @click="handleLike"
                   v-if="authStore.isAuthenticated"
                 />
@@ -60,7 +61,7 @@
               <div class="stats">
                 <span class="stat">
                   <VaIcon name="favorite" />
-                  {{ post.likes }}
+                  {{ post.likesCount }}
                 </span>
                 <span class="stat">
                   <VaIcon name="comment" />
@@ -86,7 +87,7 @@
             </div>
 
             <div class="photo-info" v-if="post.metadata">
-              <h3>{{ $t("app.photoInfo") }}</h3>
+              <h3>{{ t("app.photoInfo") }}</h3>
               <div class="info-grid">
                 <div v-if="post.metadata.camera" class="info-item">
                   <VaIcon name="camera" />
@@ -106,7 +107,7 @@
                     <span class="value">{{ post.metadata.settings.aperture }}</span>
                   </div>
                   <div v-if="post.metadata.settings.shutterSpeed" class="setting">
-                    <span class="label">{{ $t("app.shutterSpeed") }}</span>
+                    <span class="label">{{ t("app.shutterSpeed") }}</span>
                     <span class="value">{{ post.metadata.settings.shutterSpeed }}</span>
                   </div>
                 </div>
@@ -123,7 +124,7 @@
 
         <div class="map-section">
           <div class="map-header">
-            <h3 class="map-title">{{ $t("app.locationOnMap") }}</h3>
+            <h3 class="map-title">{{ t("app.locationOnMap") }}</h3>
             <VaButton
               preset="plain"
               icon="fullscreen"
@@ -140,10 +141,10 @@
       <section v-else class="not-found">
         <div class="not-found-content">
           <VaIcon name="error" size="large" />
-          <h2>{{ $t("app.postNotFound") }}</h2>
-          <p>{{ $t("app.postNotFoundDesc") }}</p>
+          <h2>{{ t("app.postNotFound") }}</h2>
+          <p>{{ t("app.postNotFoundDesc") }}</p>
           <RouterLink to="/search" class="back-link">
-            <VaButton>{{ $t("app.backToSearch") }}</VaButton>
+            <VaButton>{{ t("app.backToSearch") }}</VaButton>
           </RouterLink>
         </div>
       </section>
@@ -154,6 +155,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import { usePostStore } from "../stores/post";
 import { useAuthStore } from "../stores/auth";
 import { showToast } from "../utils/toast";
@@ -161,6 +163,7 @@ import PostCard from "../components/PostCard.vue";
 import MapContainer from "../components/map/MapContainer.vue";
 import { VaIcon, VaChip, VaButton, VaSkeleton } from "vuestic-ui";
 
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const postStore = usePostStore();
@@ -169,6 +172,7 @@ const authStore = useAuthStore();
 const isLoading = ref(true);
 const error = ref<string | null>(null);
 const isMapFullscreen = ref(false);
+const isLikeAnimating = ref(false);
 
 const postId = computed(() => route.params.id?.toString());
 const post = computed(() => postStore.currentPost);
@@ -198,17 +202,25 @@ async function fetchPost() {
 
 async function handleLike() {
   if (!authStore.isAuthenticated) {
-    showToast($t("app.loginRequired"), "info");
+    showToast(t("app.loginRequired"), "info");
     return;
   }
 
-  if (post.value && authStore.user) {
-    try {
-      await postStore.toggleLike(post.value.id, authStore.user.id);
-      showToast(isLiked.value ? $t("app.postUnliked") : $t("app.postLiked"), "success");
-    } catch (err) {
-      showToast($t("app.errorOccurred"), "error");
-    }
+  if (!post.value || !authStore.user || isLikeAnimating.value) return;
+
+  isLikeAnimating.value = true;
+  try {
+    await postStore.toggleLike(post.value.id, authStore.user.id);
+    showToast(
+      postStore.isLiked(post.value.id, authStore.user.id)
+        ? t("app.postLiked")
+        : t("app.postUnliked"),
+      "success"
+    );
+  } catch (err) {
+    showToast(t("app.errorOccurred"), "error");
+  } finally {
+    isLikeAnimating.value = false;
   }
 }
 
@@ -219,12 +231,10 @@ async function handleShare() {
       text: post.value?.description,
       url: window.location.href,
     });
-    showToast($t("app.sharedSuccessfully"), "success");
+    showToast(t("app.sharedSuccessfully"), "success");
   } catch (err) {
-    // Если Web Share API не поддерживается или произошла ошибка,
-    // копируем ссылку в буфер обмена
     await navigator.clipboard.writeText(window.location.href);
-    showToast($t("app.linkCopied"), "success");
+    showToast(t("app.linkCopied"), "success");
   }
 }
 
@@ -340,6 +350,37 @@ onMounted(fetchPost);
     .meta-actions {
       display: flex;
       gap: 8px;
+
+      .action-button {
+        opacity: 0.7;
+        transition: all 0.2s;
+
+        &:hover {
+          opacity: 1;
+          transform: scale(1.1);
+        }
+
+        &.like-button {
+          position: relative;
+          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+          &:global(.liked) {
+            transform: scale(1.1);
+          }
+
+          :global(.like-icon) {
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          }
+
+          &:hover :global(.like-icon) {
+            transform: scale(1.2);
+          }
+
+          &:global(.liked) :global(.like-icon) {
+            animation: likeAnimation 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+          }
+        }
+      }
     }
   }
 
@@ -461,13 +502,12 @@ onMounted(fetchPost);
   }
 }
 
-.action-button {
-  opacity: 0.7;
-  transition: all 0.2s;
-
-  &:hover {
-    opacity: 1;
-    transform: scale(1.1);
+@keyframes likeAnimation {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.3);
   }
 }
 

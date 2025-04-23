@@ -1,6 +1,6 @@
 <template>
-  <router-link :to="`/post/${post.id}`" class="result-item">
-    <div class="image-container">
+  <div class="result-item">
+    <div class="image-container" @click="openImage">
       <img
         :src="post.image"
         :alt="post.title"
@@ -13,7 +13,7 @@
         <span>{{ $t("app.open") }}</span>
       </div>
     </div>
-    <div class="result-info">
+    <div class="result-info" @click="goToPost">
       <div class="info-header">
         <h3>{{ post.title }}</h3>
         <VaButton preset="plain" icon="favorite_border" class="like-button" color="primary" />
@@ -37,22 +37,40 @@
         </VaChip>
       </div>
     </div>
-  </router-link>
+    <FullscreenImage
+      v-model="isFullscreen"
+      :src="post.image"
+      :alt="post.title"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
 import { VaIcon, VaButton, VaChip } from "vuestic-ui";
 import { type Post } from "../../stores/post";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
+import FullscreenImage from "../common/FullscreenImage.vue";
 
-defineProps<{
+const props = defineProps<{
   post: Post;
 }>();
 
-const handleImageError = (event: Event) => {
+const router = useRouter();
+const isFullscreen = ref(false);
+
+function handleImageError(event: Event) {
   const img = event.target as HTMLImageElement;
-  img.src = "/images/placeholder.jpg"; // Fallback изображение
-};
+  img.src = "/images/placeholder.jpg";
+}
+
+function openImage() {
+  isFullscreen.value = true;
+}
+
+function goToPost() {
+  router.push(`/post/${props.post.id}`);
+}
 </script>
 
 <style scoped lang="scss">
@@ -77,9 +95,15 @@ const handleImageError = (event: Event) => {
 
 .image-container {
   position: relative;
-  aspect-ratio: 16/9;
+  width: 100%;
+  height: 280px;
   overflow: hidden;
   background: var(--va-background-secondary);
+  border-radius: 12px 12px 0 0;
+
+  @media (max-width: 768px) {
+    height: 220px;
+  }
 
   img {
     width: 100%;

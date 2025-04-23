@@ -10,11 +10,17 @@
       decoding="async"
       @load="handleLoad"
       @error="handleError"
+      @click="isFullscreen = true"
     />
     <div v-if="error" class="error-overlay">
       <VaIcon name="broken_image" />
       <p>{{ $t("app.imageLoadError") }}</p>
     </div>
+    <FullscreenImage
+      v-model="isFullscreen"
+      :src="src"
+      :alt="alt"
+    />
   </div>
 </template>
 
@@ -22,6 +28,7 @@
 import { ref } from "vue";
 import { VaIcon } from "vuestic-ui";
 import ImageSkeleton from "../common/ImageSkeleton.vue";
+import FullscreenImage from "../common/FullscreenImage.vue";
 
 defineProps<{
   src: string;
@@ -30,6 +37,7 @@ defineProps<{
 
 const loading = ref(true);
 const error = ref(false);
+const isFullscreen = ref(false);
 
 function handleLoad() {
   loading.value = false;
@@ -46,10 +54,14 @@ function handleError() {
 .post-image-container {
   position: relative;
   width: 100%;
-  min-height: 200px;
+  height: 500px;
   border-radius: 12px;
   overflow: hidden;
   background: var(--va-background-secondary);
+
+  @media (max-width: 768px) {
+    height: 350px;
+  }
 
   &.loading {
     animation: pulse 1.5s ease-in-out infinite;
@@ -61,6 +73,7 @@ function handleError() {
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+  cursor: zoom-in;
 
   &:hover {
     transform: scale(1.02);

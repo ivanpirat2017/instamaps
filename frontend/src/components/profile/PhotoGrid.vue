@@ -5,15 +5,10 @@
       <p>{{ $t("app.noPhotosYet") }}</p>
     </div>
     <div v-else class="grid">
-      <RouterLink
-        v-for="post in posts"
-        :key="post.id"
-        :to="{ name: 'post', params: { id: post.id } }"
-        class="grid-item"
-      >
-        <div class="image-container">
+      <div v-for="post in posts" :key="post.id" class="grid-item">
+        <div class="image-container" @click="openImage(post)">
           <img
-            :src="post.imageUrl"
+            :src="post.image"
             :alt="post.description"
             loading="lazy"
             decoding="async"
@@ -32,18 +27,43 @@
             </div>
           </div>
         </div>
-      </RouterLink>
+      </div>
     </div>
+    <FullscreenImage
+      v-model="isFullscreen"
+      :src="selectedImage?.image || ''"
+      :alt="selectedImage?.description || ''"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { VaIcon } from "vuestic-ui";
+import { ref } from "vue";
 import type { Post } from "../../stores/post";
+import { useRouter } from "vue-router";
+import FullscreenImage from "../common/FullscreenImage.vue";
 
-defineProps<{
+const props = defineProps<{
   posts: Post[];
 }>();
+
+const router = useRouter();
+const isFullscreen = ref(false);
+const selectedImage = ref<Post | null>(null);
+
+function openImage(post: Post) {
+  // При клике сначала показываем во весь экран
+  selectedImage.value = post;
+  isFullscreen.value = true;
+
+  // Если пользователь закрыл просмотр, переходим на страницу поста
+  setTimeout(() => {
+    if (!isFullscreen.value) {
+      router.push(`/post/${post.id}`);
+    }
+  }, 300);
+}
 </script>
 
 <style scoped lang="scss">
@@ -53,16 +73,20 @@ defineProps<{
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 16px;
 }
 
 .grid-item {
   position: relative;
-  aspect-ratio: 1;
+  height: 280px;
   overflow: hidden;
   border-radius: 8px;
   transition: transform 0.2s;
+
+  @media (max-width: 768px) {
+    height: 220px;
+  }
 
   &:hover {
     transform: scale(1.02);

@@ -13,6 +13,7 @@ services:
       - POSTGRES_USER=instamaps
       - POSTGRES_PASSWORD=instamaps
       - POSTGRES_DB=instamaps
+      - PGDATA=/var/lib/postgresql/data/pgdata
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U instamaps"]
       interval: 5s
@@ -25,17 +26,25 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend/instamap-core-api:/app
     environment:
       - POSTGRES_SERVER=postgres
       - POSTGRES_USER=instamaps
       - POSTGRES_PASSWORD=instamaps
       - POSTGRES_DB=instamaps
-      - SECRET_KEY=your-secret-key-here
+      - SECRET_KEY=your-super-secret-key-here
     depends_on:
       postgres:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    restart: unless-stopped
+    volumes:
+      - ./backend/instamap-core-api:/app
 
 volumes:
   postgres_data:
+    driver: local

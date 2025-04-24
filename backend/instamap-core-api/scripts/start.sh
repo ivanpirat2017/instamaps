@@ -1,11 +1,14 @@
 #!/bin/bash
+set -e
 
-# Ждем, пока база данных будет готова
 echo "Waiting for PostgreSQL..."
-while ! nc -z postgres 5432; do
-  sleep 0.1
+# Ожидание доступности PostgreSQL с использованием переменных окружения
+until pg_isready -h "$PGHOST" -U "$PGUSER"; do
+  echo "PostgreSQL is unavailable - sleeping"
+  sleep 1
 done
-echo "PostgreSQL started"
+
+echo "PostgreSQL is up and running!"
 
 # Применяем миграции
 echo "Running database migrations..."

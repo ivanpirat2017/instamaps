@@ -3,6 +3,9 @@ name = "instamap-core-api"
 version = "0.1.0"
 description = "Backend API for Instamaps application"
 authors = ["Your Name <your.email@example.com>"]
+packages = [
+    { include = "app" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.11"

@@ -9,23 +9,32 @@ RUN apt-get update && apt-get install -y \
     gdal-bin \
     libgdal-dev \
     netcat-traditional \
+    curl \
+    postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-# Установка poetry
-RUN pip install poetry
+# Копирование зависимостей и установка их через pip
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Копирование файлов зависимостей
-COPY pyproject.toml poetry.lock ./
-
-# Установка зависимостей
-RUN poetry config virtualenvs.create false \
-    && poetry install --no-interaction --no-ansi
+# Проверка установки основных пакетов
+RUN python -c "import sqlalchemy" && \
+    python -c "import alembic" && \
+    python -c "import fastapi"
 
 # Копирование исходного кода
 COPY . .
 
 # Делаем скрипт запуска исполняемым
 RUN chmod +x /app/scripts/start.sh
+
+# Переменные окружения для Python и PostgreSQL
+ENV PYTHONPATH=/app \
+    PYTHONUNBUFFERED=1 \
+    PGHOST=postgres \
+    PGUSER=instamaps \
+    PGPASSWORD=instamaps \
+    PGDATABASE=instamaps
 
 # Запуск приложения через скрипт
 CMD ["/app/scripts/start.sh"]

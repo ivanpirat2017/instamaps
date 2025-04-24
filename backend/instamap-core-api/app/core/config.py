@@ -1,5 +1,6 @@
 from typing import List
 from pydantic_settings import BaseSettings
+from pydantic import Field, validator
 
 class Settings(BaseSettings):
     PROJECT_NAME: str = "Instamaps API"
@@ -9,21 +10,23 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: List[str] = ["http://localhost:8080", "http://localhost:3000"]
     
     # Database
-    POSTGRES_SERVER: str = "localhost"
+    POSTGRES_SERVER: str = "postgres"
     POSTGRES_USER: str = "instamaps"
     POSTGRES_PASSWORD: str = "instamaps"
     POSTGRES_DB: str = "instamaps"
-    SQLALCHEMY_DATABASE_URI: str = None
+    SQLALCHEMY_DATABASE_URI: str = Field(default="")
+
+    @validator("SQLALCHEMY_DATABASE_URI", pre=True)
+    def assemble_db_connection(cls, v: str | None, values: dict) -> str:
+        if isinstance(v, str) and v != "":
+            return v
+        return (
+            f"postgresql://{values.get('POSTGRES_USER')}:{values.get('POSTGRES_PASSWORD')}"
+            f"@{values.get('POSTGRES_SERVER')}/{values.get('POSTGRES_DB')}"
+        )
 
     class Config:
         case_sensitive = True
         env_file = ".env"
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.SQLALCHEMY_DATABASE_URI = (
-            f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
-            f"@{self.POSTGRES_SERVER}/{self.POSTGRES_DB}"
-        )
 
 settings = Settings()

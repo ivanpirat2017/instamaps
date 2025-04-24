@@ -31,12 +31,7 @@
       </div>
 
       <div class="post-actions">
-        <button 
-          class="action-button like-button"
-          @click="handleLike"
-          :class="{ 'liked': isLiked }"
-          v-if="authStore.isAuthenticated"
-        >
+        <button class="action-button like-button" @click="handleLike" :class="{ liked: isLiked }">
           <VaIcon
             :name="isLiked ? 'favorite' : 'favorite_border'"
             :color="isLiked ? 'danger' : ''"
@@ -262,7 +257,8 @@ function formatDate(dateString: string) {
 }
 
 @keyframes likeAnimation {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {

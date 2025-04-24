@@ -1,10 +1,5 @@
 <template>
-  <VaCard 
-    class="map-overlay" 
-    v-if="post" 
-    @click="goToPost"
-    :class="{ clickable: !staticMode }"
-  >
+  <VaCard class="map-overlay" v-if="post" @click="goToPost" :class="{ clickable: !staticMode }">
     <VaCardTitle>{{ post.title }}</VaCardTitle>
     <VaCardContent>
       <p class="location-text">
@@ -56,7 +51,7 @@ const goToPost = () => {
   align-items: center;
   gap: 6px;
   color: var(--va-text-secondary);
-  
+
   .va-icon {
     font-size: 16px;
   }

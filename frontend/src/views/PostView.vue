@@ -52,7 +52,6 @@
                   class="action-button like-button"
                   :class="{ liked: isLiked }"
                   @click="handleLike"
-                  v-if="authStore.isAuthenticated"
                 />
               </div>
             </div>
@@ -503,7 +502,8 @@ onMounted(fetchPost);
 }
 
 @keyframes likeAnimation {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {

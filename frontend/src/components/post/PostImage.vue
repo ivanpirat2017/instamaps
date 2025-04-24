@@ -16,11 +16,7 @@
       <VaIcon name="broken_image" />
       <p>{{ $t("app.imageLoadError") }}</p>
     </div>
-    <FullscreenImage
-      v-model="isFullscreen"
-      :src="src"
-      :alt="alt"
-    />
+    <FullscreenImage v-model="isFullscreen" :src="src" :alt="alt" />
   </div>
 </template>
 

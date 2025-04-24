@@ -137,7 +137,7 @@ export const usePostStore = defineStore("post", () => {
     await simulateDelay();
 
     const currentLikeState = post.userLikes[userId] || false;
-    
+
     if (currentLikeState) {
       // Убираем лайк
       post.likesCount = Math.max(0, post.likesCount - 1);

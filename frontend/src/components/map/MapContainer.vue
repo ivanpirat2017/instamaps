@@ -30,7 +30,7 @@ const emit = defineEmits<{
 
 function createMarker(post: Post) {
   if (!post.location || !post.image) return;
-  
+
   const el = document.createElement("div");
   el.className = "custom-marker";
   el.style.width = "48px";
@@ -41,7 +41,7 @@ function createMarker(post: Post) {
   el.style.border = "2px solid #fff";
   el.style.background = "#fff";
   el.style.cursor = "pointer";
-  
+
   const img = document.createElement("img");
   img.src = post.image;
   img.alt = post.title;
@@ -53,9 +53,9 @@ function createMarker(post: Post) {
   el.addEventListener("click", () => {
     if (!props.staticMode) {
       emit("update-selected", post);
-      const currentMarker = document.querySelector('.custom-marker.selected');
-      if (currentMarker) currentMarker.classList.remove('selected');
-      el.classList.add('selected');
+      const currentMarker = document.querySelector(".custom-marker.selected");
+      if (currentMarker) currentMarker.classList.remove("selected");
+      el.classList.add("selected");
     }
   });
 
@@ -72,9 +72,10 @@ function setupMap() {
       map = new maplibregl.Map({
         container: mapContainer.value!,
         style: "https://demotiles.maplibre.org/style.json",
-        center: props.staticMode && props.selectedPost?.location
-          ? [props.selectedPost.location.lng, props.selectedPost.location.lat]
-          : [0, 0],
+        center:
+          props.staticMode && props.selectedPost?.location
+            ? [props.selectedPost.location.lng, props.selectedPost.location.lat]
+            : [0, 0],
         zoom: props.staticMode ? 10 : 2,
         interactive: !props.staticMode,
       });
@@ -103,13 +104,16 @@ function setupMap() {
 
 onMounted(setupMap);
 
-watch(() => props.selectedPost, (newVal, oldVal) => {
-  if (props.staticMode && map && newVal && newVal.location) {
-    map.setCenter([newVal.location.lng, newVal.location.lat]);
-    map.setZoom(10);
-    // Можно добавить пересоздание маркера, если нужно
+watch(
+  () => props.selectedPost,
+  (newVal, oldVal) => {
+    if (props.staticMode && map && newVal && newVal.location) {
+      map.setCenter([newVal.location.lng, newVal.location.lat]);
+      map.setZoom(10);
+      // Можно добавить пересоздание маркера, если нужно
+    }
   }
-});
+);
 
 onUnmounted(() => {
   if (map) {
@@ -160,8 +164,7 @@ onUnmounted(() => {
 .custom-marker.selected {
   transform: scale(1.15);
   z-index: 11;
-  box-shadow: 0 0 0 4px var(--va-primary),
-              0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 0 4px var(--va-primary), 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 @media (max-width: 768px) {

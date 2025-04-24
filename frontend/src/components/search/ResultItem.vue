@@ -37,11 +37,7 @@
         </VaChip>
       </div>
     </div>
-    <FullscreenImage
-      v-model="isFullscreen"
-      :src="post.image"
-      :alt="post.title"
-    />
+    <FullscreenImage v-model="isFullscreen" :src="post.image" :alt="post.title" />
   </div>
 </template>
 

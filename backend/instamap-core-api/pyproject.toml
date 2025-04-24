@@ -1,0 +1,40 @@
+[tool.poetry]
+name = "instamap-core-api"
+version = "0.1.0"
+description = "Backend API for Instamaps application"
+authors = ["Your Name <your.email@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.105.0"
+uvicorn = "^0.24.0"
+sqlalchemy = "^2.0.23"
+alembic = "^1.13.0"
+psycopg2-binary = "^2.9.9"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-multipart = "^0.0.6"
+pillow = "^10.1.0"
+geoalchemy2 = "^0.14.2"
+python-dotenv = "^1.0.0"
+pydantic = {extras = ["email"], version = "^2.5.2"}
+pydantic-settings = "^2.1.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.3"
+pytest-asyncio = "^0.23.2"
+black = "^23.11.0"
+isort = "^5.12.0"
+mypy = "^1.7.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3

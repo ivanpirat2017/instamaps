@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  postgres:
+    build:
+      context: ./backend
+      dockerfile: postgresql.Dockerfile
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=instamaps
+      - POSTGRES_PASSWORD=instamaps
+      - POSTGRES_DB=instamaps
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U instamaps"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend/instamap-core-api
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/instamap-core-api:/app
+    environment:
+      - POSTGRES_SERVER=postgres
+      - POSTGRES_USER=instamaps
+      - POSTGRES_PASSWORD=instamaps
+      - POSTGRES_DB=instamaps
+      - SECRET_KEY=your-secret-key-here
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
